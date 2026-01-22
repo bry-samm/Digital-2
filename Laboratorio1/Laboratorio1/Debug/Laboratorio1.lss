@@ -3,31 +3,31 @@ Laboratorio1.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000010  00800100  00000302  00000396  2**0
+  0 .data         00000012  00800100  0000032e  000003c2  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000302  00000000  00000000  00000094  2**1
+  1 .text         0000032e  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000008  00800110  00800110  000003a6  2**0
+  2 .bss          00000009  00800112  00800112  000003d4  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  000003a6  2**0
+  3 .comment      00000030  00000000  00000000  000003d4  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003d8  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000404  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000068  00000000  00000000  00000418  2**0
+  5 .debug_aranges 00000068  00000000  00000000  00000444  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000008b0  00000000  00000000  00000480  2**0
+  6 .debug_info   000008f6  00000000  00000000  000004ac  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 0000074e  00000000  00000000  00000d30  2**0
+  7 .debug_abbrev 00000754  00000000  00000000  00000da2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000004ce  00000000  00000000  0000147e  2**0
+  8 .debug_line   00000516  00000000  00000000  000014f6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000000f0  00000000  00000000  0000194c  2**2
+  9 .debug_frame  000000fc  00000000  00000000  00001a0c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000440  00000000  00000000  00001a3c  2**0
+ 10 .debug_str    0000046b  00000000  00000000  00001b08  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000128  00000000  00000000  00001e7c  2**0
+ 11 .debug_loc    0000018c  00000000  00000000  00001f73  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000048  00000000  00000000  00001fa4  2**0
+ 12 .debug_ranges 00000048  00000000  00000000  000020ff  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -36,7 +36,7 @@ Disassembly of section .text:
    0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
    4:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
    8:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
-   c:	0c 94 51 01 	jmp	0x2a2	; 0x2a2 <__vector_3>
+   c:	0c 94 57 01 	jmp	0x2ae	; 0x2ae <__vector_3>
   10:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   14:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   18:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
@@ -49,7 +49,7 @@ Disassembly of section .text:
   34:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   38:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   3c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
-  40:	0c 94 18 01 	jmp	0x230	; 0x230 <__vector_16>
+  40:	0c 94 15 01 	jmp	0x22a	; 0x22a <__vector_16>
   44:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   48:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   4c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
@@ -72,18 +72,18 @@ Disassembly of section .text:
   74:	11 e0       	ldi	r17, 0x01	; 1
   76:	a0 e0       	ldi	r26, 0x00	; 0
   78:	b1 e0       	ldi	r27, 0x01	; 1
-  7a:	e2 e0       	ldi	r30, 0x02	; 2
+  7a:	ee e2       	ldi	r30, 0x2E	; 46
   7c:	f3 e0       	ldi	r31, 0x03	; 3
   7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
   80:	05 90       	lpm	r0, Z+
   82:	0d 92       	st	X+, r0
-  84:	a0 31       	cpi	r26, 0x10	; 16
+  84:	a2 31       	cpi	r26, 0x12	; 18
   86:	b1 07       	cpc	r27, r17
   88:	d9 f7       	brne	.-10     	; 0x80 <__do_copy_data+0xc>
 
 0000008a <__do_clear_bss>:
   8a:	21 e0       	ldi	r18, 0x01	; 1
-  8c:	a0 e1       	ldi	r26, 0x10	; 16
+  8c:	a2 e1       	ldi	r26, 0x12	; 18
   8e:	b1 e0       	ldi	r27, 0x01	; 1
   90:	01 c0       	rjmp	.+2      	; 0x94 <.do_clear_bss_start>
 
@@ -91,11 +91,11 @@ Disassembly of section .text:
   92:	1d 92       	st	X+, r1
 
 00000094 <.do_clear_bss_start>:
-  94:	a8 31       	cpi	r26, 0x18	; 24
+  94:	ab 31       	cpi	r26, 0x1B	; 27
   96:	b2 07       	cpc	r27, r18
   98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
   9a:	0e 94 9f 00 	call	0x13e	; 0x13e <main>
-  9e:	0c 94 7f 01 	jmp	0x2fe	; 0x2fe <_exit>
+  9e:	0c 94 95 01 	jmp	0x32a	; 0x32a <_exit>
 
 000000a2 <__bad_interrupt>:
   a2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -125,28 +125,28 @@ void display_show(uint8_t numero)
 		PORTD = dig_display[numero];
   b2:	e8 2f       	mov	r30, r24
   b4:	f0 e0       	ldi	r31, 0x00	; 0
-  b6:	e0 50       	subi	r30, 0x00	; 0
-  b8:	ff 4f       	sbci	r31, 0xFF	; 255
+  b6:	ef 5f       	subi	r30, 0xFF	; 255
+  b8:	fe 4f       	sbci	r31, 0xFE	; 254
   ba:	80 81       	ld	r24, Z
   bc:	8b b9       	out	0x0b, r24	; 11
   be:	08 95       	ret
 
 000000c0 <initTMR0>:
-	
 	sei();
 }
 
-void initTMR0(){
-	TCCR0A  = 0;
+void initTMR0()
+{
+	TCCR0A = 0;
   c0:	14 bc       	out	0x24, r1	; 36
-	TCCR0B  |= (1 << CS02) | (1 << CS00);
+	TCCR0B |= (1 << CS02) | (1 << CS00);
   c2:	85 b5       	in	r24, 0x25	; 37
   c4:	85 60       	ori	r24, 0x05	; 5
   c6:	85 bd       	out	0x25, r24	; 37
-	TCNT0   = 134;
+	TCNT0 = 134;
   c8:	86 e8       	ldi	r24, 0x86	; 134
   ca:	86 bd       	out	0x26, r24	; 38
-	TIMSK0  = (1 << TOIE0);  //Activar la máscara
+	TIMSK0 = (1 << TOIE0);
   cc:	81 e0       	ldi	r24, 0x01	; 1
   ce:	80 93 6e 00 	sts	0x006E, r24	; 0x80006e <__TEXT_REGION_LENGTH__+0x7f806e>
   d2:	08 95       	ret
@@ -159,87 +159,87 @@ void setup()
 {
 	cli();
   d4:	f8 94       	cli
-	
-	CLKPR	= (1 << CLKPCE); //Habilitar la configuración del oscilador CPU
+
+	CLKPR = (1 << CLKPCE); // Habilitar la configuración del oscilador CPU
   d6:	e1 e6       	ldi	r30, 0x61	; 97
   d8:	f0 e0       	ldi	r31, 0x00	; 0
   da:	80 e8       	ldi	r24, 0x80	; 128
   dc:	80 83       	st	Z, r24
-	CLKPR	= (1 << CLKPS2) | (1 << CLKPS1); // 64 PRESCALER -> 1MHz
+	CLKPR = (1 << CLKPS2) | (1 << CLKPS1); // 64 PRESCALER -> 1MHz
   de:	86 e0       	ldi	r24, 0x06	; 6
   e0:	80 83       	st	Z, r24
-	
-	display_init();		//Inicializar display por medio de la libreria
+
+	display_init(); // Inicializar display por medio de la libreria
   e2:	0e 94 53 00 	call	0xa6	; 0xa6 <display_init>
-	
-	DDRC = 0xFF;	// Configuro PORTC como salida
+
+	DDRC = 0xFF;   // Configuro PORTC como salida
   e6:	8f ef       	ldi	r24, 0xFF	; 255
   e8:	87 b9       	out	0x07, r24	; 7
-	PORTC = 0x00;	// PORTC inicialmente apagado (leds)
+	PORTC = 0x00;  // PORTC inicialmente apagado (leds)
   ea:	18 b8       	out	0x08, r1	; 8
-	
-	DDRC |= (1 << PORTC0) | (1 << PORTC1) | (1 << PORTC2) | (1 << PORTC4);  // PORTC como salida 1 lógico
+
+	DDRC |= (1 << PORTC0) | (1 << PORTC1) | (1 << PORTC2) | (1 << PORTC4);
   ec:	87 b1       	in	r24, 0x07	; 7
   ee:	87 61       	ori	r24, 0x17	; 23
   f0:	87 b9       	out	0x07, r24	; 7
-	PORTC &= ~((1 << PORTC0) | (1 << PORTC1) | (1 << PORTC2) | (1 << PORTC4));	//Inicialmente apagados
+	PORTC &= ~((1 << PORTC0) | (1 << PORTC1) | (1 << PORTC2) | (1 << PORTC4));
   f2:	88 b1       	in	r24, 0x08	; 8
   f4:	88 7e       	andi	r24, 0xE8	; 232
   f6:	88 b9       	out	0x08, r24	; 8
-	
-	DDRB |= (1 << PORTB3) | (1 << PORTB4);	//Parte de PORTB como salidas (leds)
+
+	DDRB |= (1 << PORTB3) | (1 << PORTB4);
   f8:	84 b1       	in	r24, 0x04	; 4
   fa:	88 61       	ori	r24, 0x18	; 24
   fc:	84 b9       	out	0x04, r24	; 4
-	PORTB &= ~((1 << PORTB3) | (1 << PORTB4));	//Inicialmente apagados
+	PORTB &= ~((1 << PORTB3) | (1 << PORTB4));
   fe:	85 b1       	in	r24, 0x05	; 5
  100:	87 7e       	andi	r24, 0xE7	; 231
  102:	85 b9       	out	0x05, r24	; 5
-	
+
 	// Configuración de botones en PORTB
-	DDRB &= ~((1 << PORTB0) | (1 << PORTB1) | (1 << PORTB2));  // PB0, PB1, PB2 como entradas
+	DDRB &= ~((1 << PORTB0) | (1 << PORTB1) | (1 << PORTB2));
  104:	84 b1       	in	r24, 0x04	; 4
  106:	88 7f       	andi	r24, 0xF8	; 248
  108:	84 b9       	out	0x04, r24	; 4
-	PORTB |= (1 << PORTB0) | (1 << PORTB1) | (1 << PORTB2);    // Activar pull-ups
+	PORTB |= (1 << PORTB0) | (1 << PORTB1) | (1 << PORTB2);
  10a:	85 b1       	in	r24, 0x05	; 5
  10c:	87 60       	ori	r24, 0x07	; 7
  10e:	85 b9       	out	0x05, r24	; 5
-	
-	// Habilitar interrupción en PB1 (PCI0)
-	PCICR |= (1 << PCIE0);               // Habilitar interrupciones en PORTB
+
+	// Habilitar interrupción en PB0, PB1, PB2
+	PCICR |= (1 << PCIE0);
  110:	e8 e6       	ldi	r30, 0x68	; 104
  112:	f0 e0       	ldi	r31, 0x00	; 0
  114:	80 81       	ld	r24, Z
  116:	81 60       	ori	r24, 0x01	; 1
  118:	80 83       	st	Z, r24
-	PCMSK0 |= (1 << PCINT0) | (1 << PCINT1) | (1 << PCINT2);  // PB0, PB1, PB2
+	PCMSK0 |= (1 << PCINT0) | (1 << PCINT1) | (1 << PCINT2);
  11a:	eb e6       	ldi	r30, 0x6B	; 107
  11c:	f0 e0       	ldi	r31, 0x00	; 0
  11e:	80 81       	ld	r24, Z
  120:	87 60       	ori	r24, 0x07	; 7
  122:	80 83       	st	Z, r24
-	
-	UCSR0B = 0x00;		//Deshabilitar comunicación serial
+
+	UCSR0B = 0x00; // Deshabilitar comunicación serial
  124:	10 92 c1 00 	sts	0x00C1, r1	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7f80c1>
-	
+
 	contador_mostrar_dis = 5;
  128:	85 e0       	ldi	r24, 0x05	; 5
- 12a:	80 93 17 01 	sts	0x0117, r24	; 0x800117 <contador_mostrar_dis>
+ 12a:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <contador_mostrar_dis>
 	estado_J1 = 0;
- 12e:	10 92 14 01 	sts	0x0114, r1	; 0x800114 <estado_J1>
+ 12e:	10 92 17 01 	sts	0x0117, r1	; 0x800117 <estado_J1>
 	estado_J2 = 0;
- 132:	10 92 10 01 	sts	0x0110, r1	; 0x800110 <__data_end>
-	
+ 132:	10 92 13 01 	sts	0x0113, r1	; 0x800113 <estado_J2>
+
 	initTMR0();
  136:	0e 94 60 00 	call	0xc0	; 0xc0 <initTMR0>
-	
+
 	sei();
  13a:	78 94       	sei
  13c:	08 95       	ret
 
 0000013e <main>:
-
+// Main Function
 /****************************************/
 // Main Function
 int main(void)
@@ -249,304 +249,349 @@ int main(void)
 
 	while (1)
 	{
-		if(activar_conteo == 1){
- 142:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <activar_conteo>
+		if (reset == 1)
+ 142:	80 91 12 01 	lds	r24, 0x0112	; 0x800112 <__data_end>
  146:	81 30       	cpi	r24, 0x01	; 1
- 148:	51 f4       	brne	.+20     	; 0x15e <main+0x20>
-			 // Apagar LEDs J1 (PC0–PC3)
-			 PORTC &= 0xF0;
+ 148:	39 f4       	brne	.+14     	; 0x158 <main+0x1a>
+		{
+			// Apagar LEDs J2 (PC4, PC5, PB3, PB4)
+			PORTC &= ~((1 << PORTC4) | (1 << PORTC5) | (1 << PORTC0) | (1 << PORTC1) | (1 << PORTC2) | (1 << PORTC3));
  14a:	88 b1       	in	r24, 0x08	; 8
- 14c:	80 7f       	andi	r24, 0xF0	; 240
+ 14c:	80 7c       	andi	r24, 0xC0	; 192
  14e:	88 b9       	out	0x08, r24	; 8
-
-			 // Apagar LEDs J2 (PC4, PC5, PB3, PB4)
-			 PORTC &= ~((1 << PORTC4) | (1 << PORTC5));
- 150:	88 b1       	in	r24, 0x08	; 8
- 152:	8f 7c       	andi	r24, 0xCF	; 207
- 154:	88 b9       	out	0x08, r24	; 8
-			 PORTB &= ~((1 << PORTB3) | (1 << PORTB4));
- 156:	85 b1       	in	r24, 0x05	; 5
- 158:	87 7e       	andi	r24, 0xE7	; 231
- 15a:	85 b9       	out	0x05, r24	; 5
- 15c:	f2 cf       	rjmp	.-28     	; 0x142 <main+0x4>
-		}else{
-			
-		// ===== CONTADOR J1 (PC0 a PC3) ===== 
-		if (activar_conteo_J1 && habilitar_jugadores)
- 15e:	80 91 15 01 	lds	r24, 0x0115	; 0x800115 <activar_conteo_J1>
- 162:	88 23       	and	r24, r24
- 164:	e9 f0       	breq	.+58     	; 0x1a0 <main+0x62>
- 166:	80 91 11 01 	lds	r24, 0x0111	; 0x800111 <habilitar_jugadores>
- 16a:	88 23       	and	r24, r24
- 16c:	c9 f0       	breq	.+50     	; 0x1a0 <main+0x62>
-		{
-			activar_conteo_J1 = 0;
- 16e:	10 92 15 01 	sts	0x0115, r1	; 0x800115 <activar_conteo_J1>
-
-			if (estado_J1 == 0x00){
- 172:	80 91 14 01 	lds	r24, 0x0114	; 0x800114 <estado_J1>
- 176:	81 11       	cpse	r24, r1
- 178:	04 c0       	rjmp	.+8      	; 0x182 <main+0x44>
-			estado_J1 = 0x01;}
- 17a:	81 e0       	ldi	r24, 0x01	; 1
- 17c:	80 93 14 01 	sts	0x0114, r24	; 0x800114 <estado_J1>
- 180:	03 c0       	rjmp	.+6      	; 0x188 <main+0x4a>
-			else{
-			estado_J1 <<= 1;}
- 182:	88 0f       	add	r24, r24
- 184:	80 93 14 01 	sts	0x0114, r24	; 0x800114 <estado_J1>
-			if (estado_J1 > 0x08){
- 188:	80 91 14 01 	lds	r24, 0x0114	; 0x800114 <estado_J1>
- 18c:	89 30       	cpi	r24, 0x09	; 9
- 18e:	40 f0       	brcs	.+16     	; 0x1a0 <main+0x62>
-			estado_J1 = 0x0F;
- 190:	8f e0       	ldi	r24, 0x0F	; 15
- 192:	80 93 14 01 	sts	0x0114, r24	; 0x800114 <estado_J1>
-			display_show(1);
- 196:	81 e0       	ldi	r24, 0x01	; 1
- 198:	0e 94 57 00 	call	0xae	; 0xae <display_show>
-			habilitar_jugadores = 0;}
- 19c:	10 92 11 01 	sts	0x0111, r1	; 0x800111 <habilitar_jugadores>
+			PORTB &= ~((1 << PORTB3) | (1 << PORTB4));
+ 150:	85 b1       	in	r24, 0x05	; 5
+ 152:	87 7e       	andi	r24, 0xE7	; 231
+ 154:	85 b9       	out	0x05, r24	; 5
+ 156:	f5 cf       	rjmp	.-22     	; 0x142 <main+0x4>
 		}
-
-		// Actualizar LEDs J1 SIN pisar J2
-		PORTC = (PORTC & 0xF0) | estado_J1;
- 1a0:	88 b1       	in	r24, 0x08	; 8
- 1a2:	80 7f       	andi	r24, 0xF0	; 240
- 1a4:	90 91 14 01 	lds	r25, 0x0114	; 0x800114 <estado_J1>
- 1a8:	89 2b       	or	r24, r25
- 1aa:	88 b9       	out	0x08, r24	; 8
-
-
-		// ===== CONTADOR J2 (PC4, PC5, PB3, PB4) =====
-		if (activar_conteo_J2 && habilitar_jugadores)
- 1ac:	80 91 12 01 	lds	r24, 0x0112	; 0x800112 <activar_conteo_J2>
- 1b0:	88 23       	and	r24, r24
- 1b2:	39 f2       	breq	.-114    	; 0x142 <main+0x4>
- 1b4:	80 91 11 01 	lds	r24, 0x0111	; 0x800111 <habilitar_jugadores>
- 1b8:	88 23       	and	r24, r24
- 1ba:	19 f2       	breq	.-122    	; 0x142 <main+0x4>
+		else
 		{
-			activar_conteo_J2 = 0;
- 1bc:	10 92 12 01 	sts	0x0112, r1	; 0x800112 <activar_conteo_J2>
-
-			// 1?? Actualizar estado lógico
-			estado_J2++;
- 1c0:	80 91 10 01 	lds	r24, 0x0110	; 0x800110 <__data_end>
- 1c4:	8f 5f       	subi	r24, 0xFF	; 255
- 1c6:	80 93 10 01 	sts	0x0110, r24	; 0x800110 <__data_end>
-
-			// 2?? Caso especial: pasó de 4 ? ganador
-			if (estado_J2 > 4)
- 1ca:	85 30       	cpi	r24, 0x05	; 5
- 1cc:	70 f0       	brcs	.+28     	; 0x1ea <main+0xac>
+			// ===== CONTADOR J1 (PC0 a PC3) =====
+			if (activar_conteo_J1 && habilitar_jugadores)
+ 158:	80 91 18 01 	lds	r24, 0x0118	; 0x800118 <activar_conteo_J1>
+ 15c:	88 23       	and	r24, r24
+ 15e:	e9 f0       	breq	.+58     	; 0x19a <main+0x5c>
+ 160:	80 91 14 01 	lds	r24, 0x0114	; 0x800114 <habilitar_jugadores>
+ 164:	88 23       	and	r24, r24
+ 166:	c9 f0       	breq	.+50     	; 0x19a <main+0x5c>
 			{
-				habilitar_jugadores = 0;
- 1ce:	10 92 11 01 	sts	0x0111, r1	; 0x800111 <habilitar_jugadores>
-				// Mostrar ganador (todos ON)
-				PORTC |= (1 << PORTC4) | (1 << PORTC5);
- 1d2:	88 b1       	in	r24, 0x08	; 8
- 1d4:	80 63       	ori	r24, 0x30	; 48
- 1d6:	88 b9       	out	0x08, r24	; 8
-				PORTB |= (1 << PORTB3) | (1 << PORTB4);
- 1d8:	85 b1       	in	r24, 0x05	; 5
- 1da:	88 61       	ori	r24, 0x18	; 24
- 1dc:	85 b9       	out	0x05, r24	; 5
-				display_show(2);
- 1de:	82 e0       	ldi	r24, 0x02	; 2
- 1e0:	0e 94 57 00 	call	0xae	; 0xae <display_show>
-				estado_J2 = 0;
- 1e4:	10 92 10 01 	sts	0x0110, r1	; 0x800110 <__data_end>
- 1e8:	ac cf       	rjmp	.-168    	; 0x142 <main+0x4>
-			}
-			else
-			{
-				// 3?? Estado normal ? one-hot
-				// Apagar LEDs de J2
-				PORTC &= ~((1 << PORTC4) | (1 << PORTC5));
- 1ea:	88 b1       	in	r24, 0x08	; 8
- 1ec:	8f 7c       	andi	r24, 0xCF	; 207
- 1ee:	88 b9       	out	0x08, r24	; 8
-				PORTB &= ~((1 << PORTB3) | (1 << PORTB4));
- 1f0:	85 b1       	in	r24, 0x05	; 5
- 1f2:	87 7e       	andi	r24, 0xE7	; 231
- 1f4:	85 b9       	out	0x05, r24	; 5
+				activar_conteo_J1 = 0;
+ 168:	10 92 18 01 	sts	0x0118, r1	; 0x800118 <activar_conteo_J1>
 
-				switch (estado_J2)
- 1f6:	80 91 10 01 	lds	r24, 0x0110	; 0x800110 <__data_end>
- 1fa:	82 30       	cpi	r24, 0x02	; 2
- 1fc:	69 f0       	breq	.+26     	; 0x218 <main+0xda>
- 1fe:	18 f4       	brcc	.+6      	; 0x206 <main+0xc8>
- 200:	81 30       	cpi	r24, 0x01	; 1
- 202:	31 f0       	breq	.+12     	; 0x210 <main+0xd2>
- 204:	9e cf       	rjmp	.-196    	; 0x142 <main+0x4>
- 206:	83 30       	cpi	r24, 0x03	; 3
- 208:	59 f0       	breq	.+22     	; 0x220 <main+0xe2>
- 20a:	84 30       	cpi	r24, 0x04	; 4
- 20c:	69 f0       	breq	.+26     	; 0x228 <main+0xea>
- 20e:	99 cf       	rjmp	.-206    	; 0x142 <main+0x4>
+				if (estado_J1 == 0x00)
+ 16c:	80 91 17 01 	lds	r24, 0x0117	; 0x800117 <estado_J1>
+ 170:	81 11       	cpse	r24, r1
+ 172:	04 c0       	rjmp	.+8      	; 0x17c <main+0x3e>
 				{
-					case 1: PORTC |= (1 << PORTC4); break;
- 210:	88 b1       	in	r24, 0x08	; 8
- 212:	80 61       	ori	r24, 0x10	; 16
- 214:	88 b9       	out	0x08, r24	; 8
- 216:	95 cf       	rjmp	.-214    	; 0x142 <main+0x4>
-					case 2: PORTC |= (1 << PORTC5); break;
- 218:	88 b1       	in	r24, 0x08	; 8
- 21a:	80 62       	ori	r24, 0x20	; 32
- 21c:	88 b9       	out	0x08, r24	; 8
- 21e:	91 cf       	rjmp	.-222    	; 0x142 <main+0x4>
-					case 3: PORTB |= (1 << PORTB3); break;
- 220:	85 b1       	in	r24, 0x05	; 5
- 222:	88 60       	ori	r24, 0x08	; 8
- 224:	85 b9       	out	0x05, r24	; 5
- 226:	8d cf       	rjmp	.-230    	; 0x142 <main+0x4>
-					case 4: PORTB |= (1 << PORTB4); break;
- 228:	85 b1       	in	r24, 0x05	; 5
- 22a:	80 61       	ori	r24, 0x10	; 16
- 22c:	85 b9       	out	0x05, r24	; 5
- 22e:	89 cf       	rjmp	.-238    	; 0x142 <main+0x4>
+					estado_J1 = 0x01;
+ 174:	81 e0       	ldi	r24, 0x01	; 1
+ 176:	80 93 17 01 	sts	0x0117, r24	; 0x800117 <estado_J1>
+ 17a:	03 c0       	rjmp	.+6      	; 0x182 <main+0x44>
+				}
+				else
+				{
+					estado_J1 <<= 1;
+ 17c:	88 0f       	add	r24, r24
+ 17e:	80 93 17 01 	sts	0x0117, r24	; 0x800117 <estado_J1>
+				}
 
-00000230 <__vector_16>:
-	TCNT0   = 134;
-	TIMSK0  = (1 << TOIE0);  //Activar la máscara
+				if (estado_J1 > 0x08)
+ 182:	80 91 17 01 	lds	r24, 0x0117	; 0x800117 <estado_J1>
+ 186:	89 30       	cpi	r24, 0x09	; 9
+ 188:	40 f0       	brcs	.+16     	; 0x19a <main+0x5c>
+				{
+					estado_J1 = 0x0F;
+ 18a:	8f e0       	ldi	r24, 0x0F	; 15
+ 18c:	80 93 17 01 	sts	0x0117, r24	; 0x800117 <estado_J1>
+					display_show(1);
+ 190:	81 e0       	ldi	r24, 0x01	; 1
+ 192:	0e 94 57 00 	call	0xae	; 0xae <display_show>
+					habilitar_jugadores = 0;
+ 196:	10 92 14 01 	sts	0x0114, r1	; 0x800114 <habilitar_jugadores>
+				}
+			}
+
+			// Actualizar LEDs J1 SIN pisar J2
+			PORTC = (PORTC & 0xF0) | estado_J1;
+ 19a:	88 b1       	in	r24, 0x08	; 8
+ 19c:	80 7f       	andi	r24, 0xF0	; 240
+ 19e:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <estado_J1>
+ 1a2:	89 2b       	or	r24, r25
+ 1a4:	88 b9       	out	0x08, r24	; 8
+
+			// ===== CONTADOR J2 (PC4, PC5, PB3, PB4) =====
+			if (activar_conteo_J2 && habilitar_jugadores)
+ 1a6:	80 91 15 01 	lds	r24, 0x0115	; 0x800115 <activar_conteo_J2>
+ 1aa:	88 23       	and	r24, r24
+ 1ac:	51 f2       	breq	.-108    	; 0x142 <main+0x4>
+ 1ae:	80 91 14 01 	lds	r24, 0x0114	; 0x800114 <habilitar_jugadores>
+ 1b2:	88 23       	and	r24, r24
+ 1b4:	31 f2       	breq	.-116    	; 0x142 <main+0x4>
+			{
+				activar_conteo_J2 = 0;
+ 1b6:	10 92 15 01 	sts	0x0115, r1	; 0x800115 <activar_conteo_J2>
+
+				// 1?? Actualizar estado lógico
+				estado_J2++;
+ 1ba:	80 91 13 01 	lds	r24, 0x0113	; 0x800113 <estado_J2>
+ 1be:	8f 5f       	subi	r24, 0xFF	; 255
+ 1c0:	80 93 13 01 	sts	0x0113, r24	; 0x800113 <estado_J2>
+
+				// 2?? Caso especial: pasó de 4 ? ganador
+				if (estado_J2 > 4)
+ 1c4:	85 30       	cpi	r24, 0x05	; 5
+ 1c6:	70 f0       	brcs	.+28     	; 0x1e4 <main+0xa6>
+				{
+					habilitar_jugadores = 0;
+ 1c8:	10 92 14 01 	sts	0x0114, r1	; 0x800114 <habilitar_jugadores>
+
+					// Mostrar ganador (todos ON)
+					PORTC |= (1 << PORTC4) | (1 << PORTC5);
+ 1cc:	88 b1       	in	r24, 0x08	; 8
+ 1ce:	80 63       	ori	r24, 0x30	; 48
+ 1d0:	88 b9       	out	0x08, r24	; 8
+					PORTB |= (1 << PORTB3) | (1 << PORTB4);
+ 1d2:	85 b1       	in	r24, 0x05	; 5
+ 1d4:	88 61       	ori	r24, 0x18	; 24
+ 1d6:	85 b9       	out	0x05, r24	; 5
+					display_show(2);
+ 1d8:	82 e0       	ldi	r24, 0x02	; 2
+ 1da:	0e 94 57 00 	call	0xae	; 0xae <display_show>
+
+					estado_J2 = 0;
+ 1de:	10 92 13 01 	sts	0x0113, r1	; 0x800113 <estado_J2>
+ 1e2:	af cf       	rjmp	.-162    	; 0x142 <main+0x4>
+				else
+				{
+					// 3?? Estado normal ? one-hot
+
+					// Apagar LEDs de J2
+					PORTC &= ~((1 << PORTC4) | (1 << PORTC5));
+ 1e4:	88 b1       	in	r24, 0x08	; 8
+ 1e6:	8f 7c       	andi	r24, 0xCF	; 207
+ 1e8:	88 b9       	out	0x08, r24	; 8
+					PORTB &= ~((1 << PORTB3) | (1 << PORTB4));
+ 1ea:	85 b1       	in	r24, 0x05	; 5
+ 1ec:	87 7e       	andi	r24, 0xE7	; 231
+ 1ee:	85 b9       	out	0x05, r24	; 5
+
+					switch (estado_J2)
+ 1f0:	80 91 13 01 	lds	r24, 0x0113	; 0x800113 <estado_J2>
+ 1f4:	82 30       	cpi	r24, 0x02	; 2
+ 1f6:	69 f0       	breq	.+26     	; 0x212 <main+0xd4>
+ 1f8:	18 f4       	brcc	.+6      	; 0x200 <main+0xc2>
+ 1fa:	81 30       	cpi	r24, 0x01	; 1
+ 1fc:	31 f0       	breq	.+12     	; 0x20a <main+0xcc>
+ 1fe:	a1 cf       	rjmp	.-190    	; 0x142 <main+0x4>
+ 200:	83 30       	cpi	r24, 0x03	; 3
+ 202:	59 f0       	breq	.+22     	; 0x21a <main+0xdc>
+ 204:	84 30       	cpi	r24, 0x04	; 4
+ 206:	69 f0       	breq	.+26     	; 0x222 <main+0xe4>
+ 208:	9c cf       	rjmp	.-200    	; 0x142 <main+0x4>
+					{
+						case 1: PORTC |= (1 << PORTC4); break;
+ 20a:	88 b1       	in	r24, 0x08	; 8
+ 20c:	80 61       	ori	r24, 0x10	; 16
+ 20e:	88 b9       	out	0x08, r24	; 8
+ 210:	98 cf       	rjmp	.-208    	; 0x142 <main+0x4>
+						case 2: PORTC |= (1 << PORTC5); break;
+ 212:	88 b1       	in	r24, 0x08	; 8
+ 214:	80 62       	ori	r24, 0x20	; 32
+ 216:	88 b9       	out	0x08, r24	; 8
+ 218:	94 cf       	rjmp	.-216    	; 0x142 <main+0x4>
+						case 3: PORTB |= (1 << PORTB3); break;
+ 21a:	85 b1       	in	r24, 0x05	; 5
+ 21c:	88 60       	ori	r24, 0x08	; 8
+ 21e:	85 b9       	out	0x05, r24	; 5
+ 220:	90 cf       	rjmp	.-224    	; 0x142 <main+0x4>
+						case 4: PORTB |= (1 << PORTB4); break;
+ 222:	85 b1       	in	r24, 0x05	; 5
+ 224:	80 61       	ori	r24, 0x10	; 16
+ 226:	85 b9       	out	0x05, r24	; 5
+ 228:	8c cf       	rjmp	.-232    	; 0x142 <main+0x4>
+
+0000022a <__vector_16>:
+	TCNT0 = 134;
+	TIMSK0 = (1 << TOIE0);
 }
 
 ISR(TIMER0_OVF_vect)
 {
- 230:	1f 92       	push	r1
- 232:	0f 92       	push	r0
- 234:	0f b6       	in	r0, 0x3f	; 63
- 236:	0f 92       	push	r0
- 238:	11 24       	eor	r1, r1
- 23a:	2f 93       	push	r18
- 23c:	3f 93       	push	r19
- 23e:	4f 93       	push	r20
- 240:	5f 93       	push	r21
- 242:	6f 93       	push	r22
- 244:	7f 93       	push	r23
- 246:	8f 93       	push	r24
- 248:	9f 93       	push	r25
- 24a:	af 93       	push	r26
- 24c:	bf 93       	push	r27
- 24e:	ef 93       	push	r30
- 250:	ff 93       	push	r31
+ 22a:	1f 92       	push	r1
+ 22c:	0f 92       	push	r0
+ 22e:	0f b6       	in	r0, 0x3f	; 63
+ 230:	0f 92       	push	r0
+ 232:	11 24       	eor	r1, r1
+ 234:	2f 93       	push	r18
+ 236:	3f 93       	push	r19
+ 238:	4f 93       	push	r20
+ 23a:	5f 93       	push	r21
+ 23c:	6f 93       	push	r22
+ 23e:	7f 93       	push	r23
+ 240:	8f 93       	push	r24
+ 242:	9f 93       	push	r25
+ 244:	af 93       	push	r26
+ 246:	bf 93       	push	r27
+ 248:	ef 93       	push	r30
+ 24a:	ff 93       	push	r31
 	TCNT0 = 134;
- 252:	86 e8       	ldi	r24, 0x86	; 134
- 254:	86 bd       	out	0x26, r24	; 38
+ 24c:	86 e8       	ldi	r24, 0x86	; 134
+ 24e:	86 bd       	out	0x26, r24	; 38
 
 	if (activar_conteo)
- 256:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <activar_conteo>
- 25a:	88 23       	and	r24, r24
- 25c:	89 f0       	breq	.+34     	; 0x280 <__vector_16+0x50>
+ 250:	80 91 19 01 	lds	r24, 0x0119	; 0x800119 <activar_conteo>
+ 254:	88 23       	and	r24, r24
+ 256:	d1 f0       	breq	.+52     	; 0x28c <__vector_16+0x62>
 	{
 		display_show(contador_mostrar_dis);
- 25e:	80 91 17 01 	lds	r24, 0x0117	; 0x800117 <contador_mostrar_dis>
- 262:	0e 94 57 00 	call	0xae	; 0xae <display_show>
+ 258:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <contador_mostrar_dis>
+ 25c:	0e 94 57 00 	call	0xae	; 0xae <display_show>
+		reset = 1;
+ 260:	81 e0       	ldi	r24, 0x01	; 1
+ 262:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end>
 		if (contador_mostrar_dis > 0)
- 266:	80 91 17 01 	lds	r24, 0x0117	; 0x800117 <contador_mostrar_dis>
+ 266:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <contador_mostrar_dis>
  26a:	88 23       	and	r24, r24
- 26c:	21 f0       	breq	.+8      	; 0x276 <__vector_16+0x46>
+ 26c:	21 f0       	breq	.+8      	; 0x276 <__vector_16+0x4c>
 		{
 			contador_mostrar_dis--;
  26e:	81 50       	subi	r24, 0x01	; 1
- 270:	80 93 17 01 	sts	0x0117, r24	; 0x800117 <contador_mostrar_dis>
- 274:	05 c0       	rjmp	.+10     	; 0x280 <__vector_16+0x50>
+ 270:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <contador_mostrar_dis>
+ 274:	0b c0       	rjmp	.+22     	; 0x28c <__vector_16+0x62>
 		}
 		else
 		{
 			activar_conteo = 0;
- 276:	10 92 16 01 	sts	0x0116, r1	; 0x800116 <activar_conteo>
+ 276:	10 92 19 01 	sts	0x0119, r1	; 0x800119 <activar_conteo>
 			habilitar_jugadores = 1;
  27a:	81 e0       	ldi	r24, 0x01	; 1
- 27c:	80 93 11 01 	sts	0x0111, r24	; 0x800111 <habilitar_jugadores>
+ 27c:	80 93 14 01 	sts	0x0114, r24	; 0x800114 <habilitar_jugadores>
+			reset = 0;
+ 280:	10 92 12 01 	sts	0x0112, r1	; 0x800112 <__data_end>
+			estado_J1 = 0;
+ 284:	10 92 17 01 	sts	0x0117, r1	; 0x800117 <estado_J1>
+			estado_J2 = 0;
+ 288:	10 92 13 01 	sts	0x0113, r1	; 0x800113 <estado_J2>
 		}
 	}
 }
- 280:	ff 91       	pop	r31
- 282:	ef 91       	pop	r30
- 284:	bf 91       	pop	r27
- 286:	af 91       	pop	r26
- 288:	9f 91       	pop	r25
- 28a:	8f 91       	pop	r24
- 28c:	7f 91       	pop	r23
- 28e:	6f 91       	pop	r22
- 290:	5f 91       	pop	r21
- 292:	4f 91       	pop	r20
- 294:	3f 91       	pop	r19
- 296:	2f 91       	pop	r18
- 298:	0f 90       	pop	r0
- 29a:	0f be       	out	0x3f, r0	; 63
- 29c:	0f 90       	pop	r0
- 29e:	1f 90       	pop	r1
- 2a0:	18 95       	reti
+ 28c:	ff 91       	pop	r31
+ 28e:	ef 91       	pop	r30
+ 290:	bf 91       	pop	r27
+ 292:	af 91       	pop	r26
+ 294:	9f 91       	pop	r25
+ 296:	8f 91       	pop	r24
+ 298:	7f 91       	pop	r23
+ 29a:	6f 91       	pop	r22
+ 29c:	5f 91       	pop	r21
+ 29e:	4f 91       	pop	r20
+ 2a0:	3f 91       	pop	r19
+ 2a2:	2f 91       	pop	r18
+ 2a4:	0f 90       	pop	r0
+ 2a6:	0f be       	out	0x3f, r0	; 63
+ 2a8:	0f 90       	pop	r0
+ 2aa:	1f 90       	pop	r1
+ 2ac:	18 95       	reti
 
-000002a2 <__vector_3>:
+000002ae <__vector_3>:
 
+//Interupción con lógica de botones
 ISR(PCINT0_vect)
 {
- 2a2:	1f 92       	push	r1
- 2a4:	0f 92       	push	r0
- 2a6:	0f b6       	in	r0, 0x3f	; 63
- 2a8:	0f 92       	push	r0
- 2aa:	11 24       	eor	r1, r1
- 2ac:	8f 93       	push	r24
-	if (!(PINB & (1 << PORTB0)))
- 2ae:	18 99       	sbic	0x03, 0	; 3
- 2b0:	0e c0       	rjmp	.+28     	; 0x2ce <__vector_3+0x2c>
+ 2ae:	1f 92       	push	r1
+ 2b0:	0f 92       	push	r0
+ 2b2:	0f b6       	in	r0, 0x3f	; 63
+ 2b4:	0f 92       	push	r0
+ 2b6:	11 24       	eor	r1, r1
+ 2b8:	2f 93       	push	r18
+ 2ba:	8f 93       	push	r24
+ 2bc:	9f 93       	push	r25
+	//Se emplea static para que al momento de entrar y salir de la interrupción aun se mantenga el valor
+	//se usa FF por que como está configurado con pull-up el estádo "apagado" es 1
+	static uint8_t estado_anterior = 0xFF; 
+	uint8_t estado_actual = PINB; //Se lee lo que está en el puerto
+ 2be:	93 b1       	in	r25, 0x03	; 3
+	uint8_t cambio = estado_anterior ^ estado_actual; //Se emplea un XOR para indicar que cambió el estado indicando el botón que se presionó
+ 2c0:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 2c4:	89 27       	eor	r24, r25
+
+	// Botón en PB0; este inicializa el conteo regresivo 
+	if ((cambio & (1 << PINB0)) && !(estado_actual & (1 << PINB0)))//!(estado_actual & (1 << PINB0) ==> indica si está encendido o apagado el botón, tiene el NOT debido al pull-up
+ 2c6:	80 ff       	sbrs	r24, 0
+ 2c8:	10 c0       	rjmp	.+32     	; 0x2ea <__vector_3+0x3c>
+ 2ca:	90 fd       	sbrc	r25, 0
+ 2cc:	0e c0       	rjmp	.+28     	; 0x2ea <__vector_3+0x3c>
 	{
-		if (!activar_conteo && !habilitar_jugadores)
- 2b2:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <activar_conteo>
- 2b6:	81 11       	cpse	r24, r1
- 2b8:	0a c0       	rjmp	.+20     	; 0x2ce <__vector_3+0x2c>
- 2ba:	80 91 11 01 	lds	r24, 0x0111	; 0x800111 <habilitar_jugadores>
- 2be:	81 11       	cpse	r24, r1
- 2c0:	06 c0       	rjmp	.+12     	; 0x2ce <__vector_3+0x2c>
+		if (!activar_conteo && !habilitar_jugadores) //Evita el reinicio del conteo
+ 2ce:	20 91 19 01 	lds	r18, 0x0119	; 0x800119 <activar_conteo>
+ 2d2:	21 11       	cpse	r18, r1
+ 2d4:	0a c0       	rjmp	.+20     	; 0x2ea <__vector_3+0x3c>
+ 2d6:	20 91 14 01 	lds	r18, 0x0114	; 0x800114 <habilitar_jugadores>
+ 2da:	21 11       	cpse	r18, r1
+ 2dc:	06 c0       	rjmp	.+12     	; 0x2ea <__vector_3+0x3c>
 		{
+			//Activo las banderas que me sirven para iniciar el conteo 
 			contador_mostrar_dis = 5;
- 2c2:	85 e0       	ldi	r24, 0x05	; 5
- 2c4:	80 93 17 01 	sts	0x0117, r24	; 0x800117 <contador_mostrar_dis>
+ 2de:	25 e0       	ldi	r18, 0x05	; 5
+ 2e0:	20 93 1a 01 	sts	0x011A, r18	; 0x80011a <contador_mostrar_dis>
 			activar_conteo = 1;
- 2c8:	81 e0       	ldi	r24, 0x01	; 1
- 2ca:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <activar_conteo>
+ 2e4:	21 e0       	ldi	r18, 0x01	; 1
+ 2e6:	20 93 19 01 	sts	0x0119, r18	; 0x800119 <activar_conteo>
 		}
 	}
 
-	if (!(PINB & (1 << PORTB1)))
- 2ce:	19 99       	sbic	0x03, 1	; 3
- 2d0:	07 c0       	rjmp	.+14     	; 0x2e0 <__vector_3+0x3e>
+	// Botón en PB1
+	if ((cambio & (1 << PINB1)) && !(estado_actual & (1 << PINB1)))//Misma lógica que en PB0
+ 2ea:	81 ff       	sbrs	r24, 1
+ 2ec:	09 c0       	rjmp	.+18     	; 0x300 <__vector_3+0x52>
+ 2ee:	91 fd       	sbrc	r25, 1
+ 2f0:	07 c0       	rjmp	.+14     	; 0x300 <__vector_3+0x52>
 	{
 		if (habilitar_jugadores)
- 2d2:	80 91 11 01 	lds	r24, 0x0111	; 0x800111 <habilitar_jugadores>
- 2d6:	88 23       	and	r24, r24
- 2d8:	19 f0       	breq	.+6      	; 0x2e0 <__vector_3+0x3e>
-		activar_conteo_J1 = 1;
- 2da:	81 e0       	ldi	r24, 0x01	; 1
- 2dc:	80 93 15 01 	sts	0x0115, r24	; 0x800115 <activar_conteo_J1>
+ 2f2:	20 91 14 01 	lds	r18, 0x0114	; 0x800114 <habilitar_jugadores>
+ 2f6:	22 23       	and	r18, r18
+ 2f8:	19 f0       	breq	.+6      	; 0x300 <__vector_3+0x52>
+		{
+			activar_conteo_J1 = 1; //Habilito bandera para iniciar el conteo de J1
+ 2fa:	21 e0       	ldi	r18, 0x01	; 1
+ 2fc:	20 93 18 01 	sts	0x0118, r18	; 0x800118 <activar_conteo_J1>
+		}
 	}
 
-	if (!(PINB & (1 << PORTB2)))
- 2e0:	1a 99       	sbic	0x03, 2	; 3
- 2e2:	07 c0       	rjmp	.+14     	; 0x2f2 <__vector_3+0x50>
+	// Botón en PB2
+	if ((cambio & (1 << PINB2)) && !(estado_actual & (1 << PINB2)))
+ 300:	82 ff       	sbrs	r24, 2
+ 302:	09 c0       	rjmp	.+18     	; 0x316 <__vector_3+0x68>
+ 304:	92 fd       	sbrc	r25, 2
+ 306:	07 c0       	rjmp	.+14     	; 0x316 <__vector_3+0x68>
 	{
 		if (habilitar_jugadores)
- 2e4:	80 91 11 01 	lds	r24, 0x0111	; 0x800111 <habilitar_jugadores>
- 2e8:	88 23       	and	r24, r24
- 2ea:	19 f0       	breq	.+6      	; 0x2f2 <__vector_3+0x50>
-		activar_conteo_J2 = 1;
- 2ec:	81 e0       	ldi	r24, 0x01	; 1
- 2ee:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <activar_conteo_J2>
+ 308:	80 91 14 01 	lds	r24, 0x0114	; 0x800114 <habilitar_jugadores>
+ 30c:	88 23       	and	r24, r24
+ 30e:	19 f0       	breq	.+6      	; 0x316 <__vector_3+0x68>
+		{
+			activar_conteo_J2 = 1; //Habilito bandera para iniciar el conteo de J2
+ 310:	81 e0       	ldi	r24, 0x01	; 1
+ 312:	80 93 15 01 	sts	0x0115, r24	; 0x800115 <activar_conteo_J2>
+		}
 	}
+	//Se coloca esta lógica para conocer el estado en el que se encuentran los botones
+	//sin esta lógica el XOR no tendría sentido ya que se está comparando con los mismos valores viejos
+	estado_anterior = estado_actual; 
+ 316:	90 93 00 01 	sts	0x0100, r25	; 0x800100 <__DATA_REGION_ORIGIN__>
 }
- 2f2:	8f 91       	pop	r24
- 2f4:	0f 90       	pop	r0
- 2f6:	0f be       	out	0x3f, r0	; 63
- 2f8:	0f 90       	pop	r0
- 2fa:	1f 90       	pop	r1
- 2fc:	18 95       	reti
+ 31a:	9f 91       	pop	r25
+ 31c:	8f 91       	pop	r24
+ 31e:	2f 91       	pop	r18
+ 320:	0f 90       	pop	r0
+ 322:	0f be       	out	0x3f, r0	; 63
+ 324:	0f 90       	pop	r0
+ 326:	1f 90       	pop	r1
+ 328:	18 95       	reti
 
-000002fe <_exit>:
- 2fe:	f8 94       	cli
+0000032a <_exit>:
+ 32a:	f8 94       	cli
 
-00000300 <__stop_program>:
- 300:	ff cf       	rjmp	.-2      	; 0x300 <__stop_program>
+0000032c <__stop_program>:
+ 32c:	ff cf       	rjmp	.-2      	; 0x32c <__stop_program>
