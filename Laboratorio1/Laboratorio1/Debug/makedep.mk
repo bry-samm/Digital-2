@@ -2,5 +2,7 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+hex_display.c
+
 main.c
 
