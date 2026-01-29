@@ -13,7 +13,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define E (1 << PORTC1) //Activo la transición bit6
+//#define E (1 << PORTC1) //Activo la transición bit6
 
 //Función para inicializar LCD en modo 8 bits
 void initLCD8bits(void);
