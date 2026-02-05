@@ -13,7 +13,7 @@ void initLCD8bits(void){
 //Habilito los pines que voy a utilizar en el LCD como salida
 	DDRD |= (1 << DDD2) | (1 << DDD3) | (1 << DDD4) | (1 << DDD5) | (1 << DDD6) | (1 << DDD7);
 	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2) | (1 << DDB3);
-//Inicialmente apagados
+//Inicialmente apagados  7
 	//PORTD = 0x00
 	PORTB &=~((1 << PORTB0) | (1 << PORTB1) | (1 << PORTB2) | (1 << PORTB3));
 	

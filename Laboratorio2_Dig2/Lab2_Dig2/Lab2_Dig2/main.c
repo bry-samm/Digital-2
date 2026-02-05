@@ -18,6 +18,8 @@ void writeChar(char caracter);
 void cadena_texto(char* texto);
 void mostrar_menu();
 
+void convertir_4_digitos(uint16_t valor, char *m, char *c, char *d, char *u);
+
 uint16_t lectura_ADC;
 uint16_t valor_mapeado;
 uint8_t unidades;
@@ -213,10 +215,11 @@ void mostrar_menu(){
 	writeChar('B');
 	writeChar(':');
 	writeChar(' ');
-	cadena_texto("\n Presione 1 para leer los potenciómetros o +/- para aumentar o decrementar S3");
-	cadena_texto("\n 1. Leer potenciómetros");
-	cadena_texto("\n	+");
-	cadena_texto("\n	-");
+	cadena_texto("\n Ingrese el número para ejecutar la opción");
+	cadena_texto("\n 1. Leer potenciómetro");
+	cadena_texto("\n +");
+	cadena_texto("\n -");
+	cadena_texto("\n");
 }
 
 //************************************************************************************
