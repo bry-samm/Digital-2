@@ -14,7 +14,7 @@
 #endif
 
 #include <avr/io.h>
-#include <stdint.h>
+#include <stdint.h> 
 
 //Función para inicializar el maestro
 void I2C_Master_Init(unsigned long SCL_Clock, uint8_t Prescaler);
@@ -35,7 +35,6 @@ uint8_t I2C_Master_Write(uint8_t dato);
 uint8_t I2C_Master_Read(uint8_t *buffer, uint8_t ack);
 
 //Función para inicializar I2C Esclavo
-void I2C_Slave_Init(uint8_t address);
-
+void I2C_Slave_Init(uint8_t ubicacion);
 
 #endif /* I2C_CONF_H_ */

@@ -1,0 +1,986 @@
+
+Proyecto1_Master.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000004  00800100  000005e8  0000067c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         000005e8  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          00000001  00800104  00800104  00000680  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  00000680  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000006b0  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 000000f0  00000000  00000000  000006f0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000010d6  00000000  00000000  000007e0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000957  00000000  00000000  000018b6  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   000009ec  00000000  00000000  0000220d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  000001f4  00000000  00000000  00002bfc  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    00000587  00000000  00000000  00002df0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    000007de  00000000  00000000  00003377  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 000000c0  00000000  00000000  00003b55  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+   8:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+   c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  10:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  14:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  18:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  1c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  20:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  24:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  28:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  2c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  30:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  34:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  38:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  3c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  40:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  44:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  48:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  4c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  50:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  54:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  58:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  5c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  60:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  64:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+
+00000074 <__do_copy_data>:
+  74:	11 e0       	ldi	r17, 0x01	; 1
+  76:	a0 e0       	ldi	r26, 0x00	; 0
+  78:	b1 e0       	ldi	r27, 0x01	; 1
+  7a:	e8 ee       	ldi	r30, 0xE8	; 232
+  7c:	f5 e0       	ldi	r31, 0x05	; 5
+  7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
+  80:	05 90       	lpm	r0, Z+
+  82:	0d 92       	st	X+, r0
+  84:	a4 30       	cpi	r26, 0x04	; 4
+  86:	b1 07       	cpc	r27, r17
+  88:	d9 f7       	brne	.-10     	; 0x80 <__do_copy_data+0xc>
+
+0000008a <__do_clear_bss>:
+  8a:	21 e0       	ldi	r18, 0x01	; 1
+  8c:	a4 e0       	ldi	r26, 0x04	; 4
+  8e:	b1 e0       	ldi	r27, 0x01	; 1
+  90:	01 c0       	rjmp	.+2      	; 0x94 <.do_clear_bss_start>
+
+00000092 <.do_clear_bss_loop>:
+  92:	1d 92       	st	X+, r1
+
+00000094 <.do_clear_bss_start>:
+  94:	a5 30       	cpi	r26, 0x05	; 5
+  96:	b2 07       	cpc	r27, r18
+  98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
+  9a:	0e 94 54 02 	call	0x4a8	; 0x4a8 <main>
+  9e:	0c 94 f2 02 	jmp	0x5e4	; 0x5e4 <_exit>
+
+000000a2 <__bad_interrupt>:
+  a2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000a6 <I2C_Master_Init>:
+#include <avr/io.h>
+#include <stdint.h>
+#include "I2C_conf.h"
+
+//Función para inicializar I2C Maestro
+void I2C_Master_Init(unsigned long SCL_Clock, uint8_t Prescaler){
+  a6:	0f 93       	push	r16
+  a8:	1f 93       	push	r17
+  aa:	cf 93       	push	r28
+  ac:	8b 01       	movw	r16, r22
+  ae:	9c 01       	movw	r18, r24
+  b0:	c4 2f       	mov	r28, r20
+	DDRC &= ~((1 << DDC4) | (1 << DDC5)); //Pines I2C como entradas y SDA y SCL 
+  b2:	87 b1       	in	r24, 0x07	; 7
+  b4:	8f 7c       	andi	r24, 0xCF	; 207
+  b6:	87 b9       	out	0x07, r24	; 7
+	//Se debe de seleccionar el valor de los bits para el prescaler del registro TWSR
+	
+	switch(Prescaler){
+  b8:	44 30       	cpi	r20, 0x04	; 4
+  ba:	79 f0       	breq	.+30     	; 0xda <I2C_Master_Init+0x34>
+  bc:	18 f4       	brcc	.+6      	; 0xc4 <I2C_Master_Init+0x1e>
+  be:	41 30       	cpi	r20, 0x01	; 1
+  c0:	31 f0       	breq	.+12     	; 0xce <I2C_Master_Init+0x28>
+  c2:	23 c0       	rjmp	.+70     	; 0x10a <I2C_Master_Init+0x64>
+  c4:	40 31       	cpi	r20, 0x10	; 16
+  c6:	91 f0       	breq	.+36     	; 0xec <I2C_Master_Init+0x46>
+  c8:	40 34       	cpi	r20, 0x40	; 64
+  ca:	c9 f0       	breq	.+50     	; 0xfe <I2C_Master_Init+0x58>
+  cc:	1e c0       	rjmp	.+60     	; 0x10a <I2C_Master_Init+0x64>
+		case 1:
+			TWSR &= ~((1 << TWPS1) | (1 << TWPS0));
+  ce:	e9 eb       	ldi	r30, 0xB9	; 185
+  d0:	f0 e0       	ldi	r31, 0x00	; 0
+  d2:	80 81       	ld	r24, Z
+  d4:	8c 7f       	andi	r24, 0xFC	; 252
+  d6:	80 83       	st	Z, r24
+		break;
+  d8:	1e c0       	rjmp	.+60     	; 0x116 <I2C_Master_Init+0x70>
+		case 4:
+			TWSR &= ~(1 << TWPS1);
+  da:	e9 eb       	ldi	r30, 0xB9	; 185
+  dc:	f0 e0       	ldi	r31, 0x00	; 0
+  de:	80 81       	ld	r24, Z
+  e0:	8d 7f       	andi	r24, 0xFD	; 253
+  e2:	80 83       	st	Z, r24
+			TWSR |= (1 << TWPS0);
+  e4:	80 81       	ld	r24, Z
+  e6:	81 60       	ori	r24, 0x01	; 1
+  e8:	80 83       	st	Z, r24
+		break;
+  ea:	15 c0       	rjmp	.+42     	; 0x116 <I2C_Master_Init+0x70>
+		case 16:
+			TWSR &= ~(1 << TWPS0);
+  ec:	e9 eb       	ldi	r30, 0xB9	; 185
+  ee:	f0 e0       	ldi	r31, 0x00	; 0
+  f0:	80 81       	ld	r24, Z
+  f2:	8e 7f       	andi	r24, 0xFE	; 254
+  f4:	80 83       	st	Z, r24
+			TWSR |= (1 << TWPS1);
+  f6:	80 81       	ld	r24, Z
+  f8:	82 60       	ori	r24, 0x02	; 2
+  fa:	80 83       	st	Z, r24
+		break;
+  fc:	0c c0       	rjmp	.+24     	; 0x116 <I2C_Master_Init+0x70>
+		case 64:
+			TWSR |= (1 << TWPS1) | (1 << TWPS0);
+  fe:	e9 eb       	ldi	r30, 0xB9	; 185
+ 100:	f0 e0       	ldi	r31, 0x00	; 0
+ 102:	80 81       	ld	r24, Z
+ 104:	83 60       	ori	r24, 0x03	; 3
+ 106:	80 83       	st	Z, r24
+		break;
+ 108:	06 c0       	rjmp	.+12     	; 0x116 <I2C_Master_Init+0x70>
+		default:
+			TWSR &= ~((1 << TWPS1) | (1 << TWPS0));
+ 10a:	e9 eb       	ldi	r30, 0xB9	; 185
+ 10c:	f0 e0       	ldi	r31, 0x00	; 0
+ 10e:	80 81       	ld	r24, Z
+ 110:	8c 7f       	andi	r24, 0xFC	; 252
+ 112:	80 83       	st	Z, r24
+			Prescaler = 1;
+ 114:	c1 e0       	ldi	r28, 0x01	; 1
+		break;
+	}
+	TWBR = ((F_CPU/SCL_Clock)-16)/(2*Prescaler); //Calcular la velocidad (ver presentación)
+ 116:	60 e0       	ldi	r22, 0x00	; 0
+ 118:	74 e2       	ldi	r23, 0x24	; 36
+ 11a:	84 ef       	ldi	r24, 0xF4	; 244
+ 11c:	90 e0       	ldi	r25, 0x00	; 0
+ 11e:	a9 01       	movw	r20, r18
+ 120:	98 01       	movw	r18, r16
+ 122:	0e 94 c1 02 	call	0x582	; 0x582 <__udivmodsi4>
+ 126:	ca 01       	movw	r24, r20
+ 128:	b9 01       	movw	r22, r18
+ 12a:	60 51       	subi	r22, 0x10	; 16
+ 12c:	71 09       	sbc	r23, r1
+ 12e:	81 09       	sbc	r24, r1
+ 130:	91 09       	sbc	r25, r1
+ 132:	4c 2f       	mov	r20, r28
+ 134:	50 e0       	ldi	r21, 0x00	; 0
+ 136:	9a 01       	movw	r18, r20
+ 138:	22 0f       	add	r18, r18
+ 13a:	33 1f       	adc	r19, r19
+ 13c:	03 2e       	mov	r0, r19
+ 13e:	00 0c       	add	r0, r0
+ 140:	44 0b       	sbc	r20, r20
+ 142:	55 0b       	sbc	r21, r21
+ 144:	0e 94 c1 02 	call	0x582	; 0x582 <__udivmodsi4>
+ 148:	20 93 b8 00 	sts	0x00B8, r18	; 0x8000b8 <__TEXT_REGION_LENGTH__+0x7f80b8>
+	TWCR |= (1 << TWEN);	// Activar la interfase (TWI - Two Wire Interfase) = I2C
+ 14c:	ec eb       	ldi	r30, 0xBC	; 188
+ 14e:	f0 e0       	ldi	r31, 0x00	; 0
+ 150:	80 81       	ld	r24, Z
+ 152:	84 60       	ori	r24, 0x04	; 4
+ 154:	80 83       	st	Z, r24
+}
+ 156:	cf 91       	pop	r28
+ 158:	1f 91       	pop	r17
+ 15a:	0f 91       	pop	r16
+ 15c:	08 95       	ret
+
+0000015e <I2C_Master_Start>:
+
+//Función de inicio de la comunicación I2C (grabacion 00:49:01)
+uint8_t I2C_Master_Start(void)
+{
+	TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN); //Master, Reiniciar bandera de Int, Condicion de Start
+ 15e:	84 ea       	ldi	r24, 0xA4	; 164
+ 160:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
+	while (!(TWCR & (1 << TWINT))); //Espera hasta que se encienda la bandera
+ 164:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
+ 168:	88 23       	and	r24, r24
+ 16a:	e4 f7       	brge	.-8      	; 0x164 <I2C_Master_Start+0x6>
+	
+	return ((TWSR & 0xF8) == 0x08); //Nos quedamos únicamente con los bits de estado
+ 16c:	90 91 b9 00 	lds	r25, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7f80b9>
+ 170:	98 7f       	andi	r25, 0xF8	; 248
+ 172:	81 e0       	ldi	r24, 0x01	; 1
+ 174:	98 30       	cpi	r25, 0x08	; 8
+ 176:	09 f0       	breq	.+2      	; 0x17a <I2C_Master_Start+0x1c>
+ 178:	80 e0       	ldi	r24, 0x00	; 0
+}
+ 17a:	08 95       	ret
+
+0000017c <I2C_Master_RepeatedStart>:
+
+//Función de reinicio de la comunicación I2C
+uint8_t I2C_Master_RepeatedStart(void)
+{
+	TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN); //Master, Reiniciar bandera de Int, COndicion de start
+ 17c:	84 ea       	ldi	r24, 0xA4	; 164
+ 17e:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
+	while (!(TWCR & (1 << TWINT))); // Esperar a que se encienda la bandera
+ 182:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
+ 186:	88 23       	and	r24, r24
+ 188:	e4 f7       	brge	.-8      	; 0x182 <I2C_Master_RepeatedStart+0x6>
+	
+	return ((TWSR & 0xF8) == 0x10); //
+ 18a:	90 91 b9 00 	lds	r25, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7f80b9>
+ 18e:	98 7f       	andi	r25, 0xF8	; 248
+ 190:	81 e0       	ldi	r24, 0x01	; 1
+ 192:	90 31       	cpi	r25, 0x10	; 16
+ 194:	09 f0       	breq	.+2      	; 0x198 <I2C_Master_RepeatedStart+0x1c>
+ 196:	80 e0       	ldi	r24, 0x00	; 0
+
+}
+ 198:	08 95       	ret
+
+0000019a <I2C_Master_Stop>:
+
+//Función de parada de la comunicación I2C
+void I2C_Master_Stop(void)
+{
+	TWCR = (1 << TWEN) | (1 << TWINT) | (1 << TWSTO); // Inicia el envío secuencia parada STOP
+ 19a:	84 e9       	ldi	r24, 0x94	; 148
+ 19c:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
+	while (TWCR & (1 << TWSTO)); // Esperar a que el bit se limpie
+ 1a0:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
+ 1a4:	84 fd       	sbrc	r24, 4
+ 1a6:	fc cf       	rjmp	.-8      	; 0x1a0 <I2C_Master_Stop+0x6>
+}
+ 1a8:	08 95       	ret
+
+000001aa <I2C_Master_Write>:
+//esta función devolverá un 0 si el esclavo a revibido un dato
+uint8_t I2C_Master_Write(uint8_t dato)
+{
+	uint8_t estado;
+	
+	TWDR = dato; //Cargo el dato
+ 1aa:	80 93 bb 00 	sts	0x00BB, r24	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7f80bb>
+	TWCR = (1 << TWEN) | (1 << TWINT); // Inicia la secuencia de envío
+ 1ae:	84 e8       	ldi	r24, 0x84	; 132
+ 1b0:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
+	//Habilitando la interfaz y limpiando la bandera de interrupción
+	
+	while(!(TWCR & (1 << TWINT))); //Nos quedamos unicamente con los bits de estado RW1 Status
+ 1b4:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
+ 1b8:	88 23       	and	r24, r24
+ 1ba:	e4 f7       	brge	.-8      	; 0x1b4 <I2C_Master_Write+0xa>
+	estado = TWSR & 0xF8;	// Nos quedamos unicamente con los bits de estado TWI Status
+ 1bc:	80 91 b9 00 	lds	r24, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7f80b9>
+ 1c0:	88 7f       	andi	r24, 0xF8	; 248
+	//Verificar si se transmitio una SLA + W cons ACK, o como un dato
+	if (estado == 0x18 || estado == 0x28){
+ 1c2:	88 31       	cpi	r24, 0x18	; 24
+ 1c4:	21 f0       	breq	.+8      	; 0x1ce <I2C_Master_Write+0x24>
+ 1c6:	88 32       	cpi	r24, 0x28	; 40
+ 1c8:	19 f4       	brne	.+6      	; 0x1d0 <I2C_Master_Write+0x26>
+		return 1;
+ 1ca:	81 e0       	ldi	r24, 0x01	; 1
+ 1cc:	08 95       	ret
+ 1ce:	81 e0       	ldi	r24, 0x01	; 1
+	}else{
+		return estado;
+	}
+}
+ 1d0:	08 95       	ret
+
+000001d2 <I2C_Master_Read>:
+//Función de recepción de datos enviados por el escalvo al maestro
+//esta función es para leer los datos que están en el esclavo
+
+//sirve para recopilar los datos del esclavo en dado caso sean 3 bytes de información
+uint8_t I2C_Master_Read(uint8_t *buffer, uint8_t ack)
+{
+ 1d2:	fc 01       	movw	r30, r24
+	uint8_t estado;
+	if(ack){
+ 1d4:	66 23       	and	r22, r22
+ 1d6:	21 f0       	breq	.+8      	; 0x1e0 <I2C_Master_Read+0xe>
+		//ACK se envía para decirle al esclavo "quiero más datos"
+		TWCR = (1 << TWINT) | (1 << TWEA) | (1 << TWEN); //Habilitar INterfase I2C con envío de ACK
+ 1d8:	84 ec       	ldi	r24, 0xC4	; 196
+ 1da:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
+ 1de:	03 c0       	rjmp	.+6      	; 0x1e6 <I2C_Master_Read+0x14>
+	} else {
+		//NACK: se indica que es el último byte
+		TWCR = (1 << TWINT) | (1 << TWEN); //Habilitar Interfase I2C sin envío de ACD (NACK)
+ 1e0:	84 e8       	ldi	r24, 0x84	; 132
+ 1e2:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
+	}
+	
+	while(!(TWCR & (1 << TWINT))); //Esperar la bandera de interrupción TWINT
+ 1e6:	90 91 bc 00 	lds	r25, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
+ 1ea:	99 23       	and	r25, r25
+ 1ec:	e4 f7       	brge	.-8      	; 0x1e6 <I2C_Master_Read+0x14>
+	
+	estado = TWSR & 0xF8; //Con esto solo se guarda los bits de estado TWI Status
+ 1ee:	90 91 b9 00 	lds	r25, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7f80b9>
+ 1f2:	98 7f       	andi	r25, 0xF8	; 248
+	//Verificar si se recibio Dato con ACK o sin ACK
+	if (ack && estado !=0x50) return 0; // Data recibida, ACK
+ 1f4:	66 23       	and	r22, r22
+ 1f6:	11 f0       	breq	.+4      	; 0x1fc <I2C_Master_Read+0x2a>
+ 1f8:	90 35       	cpi	r25, 0x50	; 80
+ 1fa:	49 f4       	brne	.+18     	; 0x20e <I2C_Master_Read+0x3c>
+	if (!ack && estado !=0x58) return 0; //Data recibida, pero sin ACK
+ 1fc:	61 11       	cpse	r22, r1
+ 1fe:	02 c0       	rjmp	.+4      	; 0x204 <I2C_Master_Read+0x32>
+ 200:	98 35       	cpi	r25, 0x58	; 88
+ 202:	39 f4       	brne	.+14     	; 0x212 <I2C_Master_Read+0x40>
+	
+	*buffer = TWDR; //Obtenemos el resulktado en el registro de datos
+ 204:	80 91 bb 00 	lds	r24, 0x00BB	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7f80bb>
+ 208:	80 83       	st	Z, r24
+	return 1;
+ 20a:	81 e0       	ldi	r24, 0x01	; 1
+ 20c:	08 95       	ret
+	
+	while(!(TWCR & (1 << TWINT))); //Esperar la bandera de interrupción TWINT
+	
+	estado = TWSR & 0xF8; //Con esto solo se guarda los bits de estado TWI Status
+	//Verificar si se recibio Dato con ACK o sin ACK
+	if (ack && estado !=0x50) return 0; // Data recibida, ACK
+ 20e:	80 e0       	ldi	r24, 0x00	; 0
+ 210:	08 95       	ret
+	if (!ack && estado !=0x58) return 0; //Data recibida, pero sin ACK
+ 212:	80 e0       	ldi	r24, 0x00	; 0
+	
+	*buffer = TWDR; //Obtenemos el resulktado en el registro de datos
+	return 1;
+}
+ 214:	08 95       	ret
+
+00000216 <LCD_Port>:
+	LCD_CMD(0x1C);
+}
+
+//Desplazamiento hacia la izquierda
+void LCD_Shift_Left(void){
+	LCD_CMD(0x18);
+ 216:	80 ff       	sbrs	r24, 0
+ 218:	04 c0       	rjmp	.+8      	; 0x222 <LCD_Port+0xc>
+ 21a:	9b b1       	in	r25, 0x0b	; 11
+ 21c:	94 60       	ori	r25, 0x04	; 4
+ 21e:	9b b9       	out	0x0b, r25	; 11
+ 220:	03 c0       	rjmp	.+6      	; 0x228 <LCD_Port+0x12>
+ 222:	9b b1       	in	r25, 0x0b	; 11
+ 224:	9b 7f       	andi	r25, 0xFB	; 251
+ 226:	9b b9       	out	0x0b, r25	; 11
+ 228:	81 ff       	sbrs	r24, 1
+ 22a:	04 c0       	rjmp	.+8      	; 0x234 <LCD_Port+0x1e>
+ 22c:	9b b1       	in	r25, 0x0b	; 11
+ 22e:	98 60       	ori	r25, 0x08	; 8
+ 230:	9b b9       	out	0x0b, r25	; 11
+ 232:	03 c0       	rjmp	.+6      	; 0x23a <LCD_Port+0x24>
+ 234:	9b b1       	in	r25, 0x0b	; 11
+ 236:	97 7f       	andi	r25, 0xF7	; 247
+ 238:	9b b9       	out	0x0b, r25	; 11
+ 23a:	82 ff       	sbrs	r24, 2
+ 23c:	04 c0       	rjmp	.+8      	; 0x246 <LCD_Port+0x30>
+ 23e:	9b b1       	in	r25, 0x0b	; 11
+ 240:	90 61       	ori	r25, 0x10	; 16
+ 242:	9b b9       	out	0x0b, r25	; 11
+ 244:	03 c0       	rjmp	.+6      	; 0x24c <LCD_Port+0x36>
+ 246:	9b b1       	in	r25, 0x0b	; 11
+ 248:	9f 7e       	andi	r25, 0xEF	; 239
+ 24a:	9b b9       	out	0x0b, r25	; 11
+ 24c:	83 ff       	sbrs	r24, 3
+ 24e:	04 c0       	rjmp	.+8      	; 0x258 <LCD_Port+0x42>
+ 250:	9b b1       	in	r25, 0x0b	; 11
+ 252:	90 62       	ori	r25, 0x20	; 32
+ 254:	9b b9       	out	0x0b, r25	; 11
+ 256:	03 c0       	rjmp	.+6      	; 0x25e <LCD_Port+0x48>
+ 258:	9b b1       	in	r25, 0x0b	; 11
+ 25a:	9f 7d       	andi	r25, 0xDF	; 223
+ 25c:	9b b9       	out	0x0b, r25	; 11
+ 25e:	84 ff       	sbrs	r24, 4
+ 260:	04 c0       	rjmp	.+8      	; 0x26a <LCD_Port+0x54>
+ 262:	9b b1       	in	r25, 0x0b	; 11
+ 264:	90 64       	ori	r25, 0x40	; 64
+ 266:	9b b9       	out	0x0b, r25	; 11
+ 268:	03 c0       	rjmp	.+6      	; 0x270 <LCD_Port+0x5a>
+ 26a:	9b b1       	in	r25, 0x0b	; 11
+ 26c:	9f 7b       	andi	r25, 0xBF	; 191
+ 26e:	9b b9       	out	0x0b, r25	; 11
+ 270:	85 ff       	sbrs	r24, 5
+ 272:	04 c0       	rjmp	.+8      	; 0x27c <LCD_Port+0x66>
+ 274:	9b b1       	in	r25, 0x0b	; 11
+ 276:	90 68       	ori	r25, 0x80	; 128
+ 278:	9b b9       	out	0x0b, r25	; 11
+ 27a:	03 c0       	rjmp	.+6      	; 0x282 <LCD_Port+0x6c>
+ 27c:	9b b1       	in	r25, 0x0b	; 11
+ 27e:	9f 77       	andi	r25, 0x7F	; 127
+ 280:	9b b9       	out	0x0b, r25	; 11
+ 282:	86 ff       	sbrs	r24, 6
+ 284:	04 c0       	rjmp	.+8      	; 0x28e <LCD_Port+0x78>
+ 286:	95 b1       	in	r25, 0x05	; 5
+ 288:	91 60       	ori	r25, 0x01	; 1
+ 28a:	95 b9       	out	0x05, r25	; 5
+ 28c:	03 c0       	rjmp	.+6      	; 0x294 <LCD_Port+0x7e>
+ 28e:	95 b1       	in	r25, 0x05	; 5
+ 290:	9e 7f       	andi	r25, 0xFE	; 254
+ 292:	95 b9       	out	0x05, r25	; 5
+ 294:	88 23       	and	r24, r24
+ 296:	24 f4       	brge	.+8      	; 0x2a0 <LCD_Port+0x8a>
+ 298:	85 b1       	in	r24, 0x05	; 5
+ 29a:	82 60       	ori	r24, 0x02	; 2
+ 29c:	85 b9       	out	0x05, r24	; 5
+ 29e:	08 95       	ret
+ 2a0:	85 b1       	in	r24, 0x05	; 5
+ 2a2:	8d 7f       	andi	r24, 0xFD	; 253
+ 2a4:	85 b9       	out	0x05, r24	; 5
+ 2a6:	08 95       	ret
+
+000002a8 <LCD_CMD>:
+ 2a8:	95 b1       	in	r25, 0x05	; 5
+ 2aa:	97 7f       	andi	r25, 0xF7	; 247
+ 2ac:	95 b9       	out	0x05, r25	; 5
+ 2ae:	95 b1       	in	r25, 0x05	; 5
+ 2b0:	9b 7f       	andi	r25, 0xFB	; 251
+ 2b2:	95 b9       	out	0x05, r25	; 5
+ 2b4:	0e 94 0b 01 	call	0x216	; 0x216 <LCD_Port>
+ 2b8:	8f e7       	ldi	r24, 0x7F	; 127
+ 2ba:	9e e3       	ldi	r25, 0x3E	; 62
+ 2bc:	01 97       	sbiw	r24, 0x01	; 1
+ 2be:	f1 f7       	brne	.-4      	; 0x2bc <LCD_CMD+0x14>
+ 2c0:	00 c0       	rjmp	.+0      	; 0x2c2 <LCD_CMD+0x1a>
+ 2c2:	00 00       	nop
+ 2c4:	85 b1       	in	r24, 0x05	; 5
+ 2c6:	84 60       	ori	r24, 0x04	; 4
+ 2c8:	85 b9       	out	0x05, r24	; 5
+ 2ca:	8f e7       	ldi	r24, 0x7F	; 127
+ 2cc:	9e e3       	ldi	r25, 0x3E	; 62
+ 2ce:	01 97       	sbiw	r24, 0x01	; 1
+ 2d0:	f1 f7       	brne	.-4      	; 0x2ce <LCD_CMD+0x26>
+ 2d2:	00 c0       	rjmp	.+0      	; 0x2d4 <LCD_CMD+0x2c>
+ 2d4:	00 00       	nop
+ 2d6:	85 b1       	in	r24, 0x05	; 5
+ 2d8:	8b 7f       	andi	r24, 0xFB	; 251
+ 2da:	85 b9       	out	0x05, r24	; 5
+ 2dc:	8f e7       	ldi	r24, 0x7F	; 127
+ 2de:	9e e3       	ldi	r25, 0x3E	; 62
+ 2e0:	01 97       	sbiw	r24, 0x01	; 1
+ 2e2:	f1 f7       	brne	.-4      	; 0x2e0 <LCD_CMD+0x38>
+ 2e4:	00 c0       	rjmp	.+0      	; 0x2e6 <LCD_CMD+0x3e>
+ 2e6:	00 00       	nop
+ 2e8:	08 95       	ret
+
+000002ea <initLCD8bits>:
+ 2ea:	8a b1       	in	r24, 0x0a	; 10
+ 2ec:	8c 6f       	ori	r24, 0xFC	; 252
+ 2ee:	8a b9       	out	0x0a, r24	; 10
+ 2f0:	84 b1       	in	r24, 0x04	; 4
+ 2f2:	8f 60       	ori	r24, 0x0F	; 15
+ 2f4:	84 b9       	out	0x04, r24	; 4
+ 2f6:	85 b1       	in	r24, 0x05	; 5
+ 2f8:	80 7f       	andi	r24, 0xF0	; 240
+ 2fa:	85 b9       	out	0x05, r24	; 5
+ 2fc:	8f e1       	ldi	r24, 0x1F	; 31
+ 2fe:	9e e4       	ldi	r25, 0x4E	; 78
+ 300:	01 97       	sbiw	r24, 0x01	; 1
+ 302:	f1 f7       	brne	.-4      	; 0x300 <initLCD8bits+0x16>
+ 304:	00 c0       	rjmp	.+0      	; 0x306 <initLCD8bits+0x1c>
+ 306:	00 00       	nop
+ 308:	80 e0       	ldi	r24, 0x00	; 0
+ 30a:	0e 94 0b 01 	call	0x216	; 0x216 <LCD_Port>
+ 30e:	9f ef       	ldi	r25, 0xFF	; 255
+ 310:	29 ef       	ldi	r18, 0xF9	; 249
+ 312:	80 e0       	ldi	r24, 0x00	; 0
+ 314:	91 50       	subi	r25, 0x01	; 1
+ 316:	20 40       	sbci	r18, 0x00	; 0
+ 318:	80 40       	sbci	r24, 0x00	; 0
+ 31a:	e1 f7       	brne	.-8      	; 0x314 <initLCD8bits+0x2a>
+ 31c:	00 c0       	rjmp	.+0      	; 0x31e <initLCD8bits+0x34>
+ 31e:	00 00       	nop
+ 320:	9f ef       	ldi	r25, 0xFF	; 255
+ 322:	29 ef       	ldi	r18, 0xF9	; 249
+ 324:	80 e0       	ldi	r24, 0x00	; 0
+ 326:	91 50       	subi	r25, 0x01	; 1
+ 328:	20 40       	sbci	r18, 0x00	; 0
+ 32a:	80 40       	sbci	r24, 0x00	; 0
+ 32c:	e1 f7       	brne	.-8      	; 0x326 <initLCD8bits+0x3c>
+ 32e:	00 c0       	rjmp	.+0      	; 0x330 <initLCD8bits+0x46>
+ 330:	00 00       	nop
+ 332:	88 e3       	ldi	r24, 0x38	; 56
+ 334:	0e 94 54 01 	call	0x2a8	; 0x2a8 <LCD_CMD>
+ 338:	9f ef       	ldi	r25, 0xFF	; 255
+ 33a:	29 ef       	ldi	r18, 0xF9	; 249
+ 33c:	80 e0       	ldi	r24, 0x00	; 0
+ 33e:	91 50       	subi	r25, 0x01	; 1
+ 340:	20 40       	sbci	r18, 0x00	; 0
+ 342:	80 40       	sbci	r24, 0x00	; 0
+ 344:	e1 f7       	brne	.-8      	; 0x33e <initLCD8bits+0x54>
+ 346:	00 c0       	rjmp	.+0      	; 0x348 <initLCD8bits+0x5e>
+ 348:	00 00       	nop
+ 34a:	8c e0       	ldi	r24, 0x0C	; 12
+ 34c:	0e 94 54 01 	call	0x2a8	; 0x2a8 <LCD_CMD>
+ 350:	9f ef       	ldi	r25, 0xFF	; 255
+ 352:	29 ef       	ldi	r18, 0xF9	; 249
+ 354:	80 e0       	ldi	r24, 0x00	; 0
+ 356:	91 50       	subi	r25, 0x01	; 1
+ 358:	20 40       	sbci	r18, 0x00	; 0
+ 35a:	80 40       	sbci	r24, 0x00	; 0
+ 35c:	e1 f7       	brne	.-8      	; 0x356 <initLCD8bits+0x6c>
+ 35e:	00 c0       	rjmp	.+0      	; 0x360 <initLCD8bits+0x76>
+ 360:	00 00       	nop
+ 362:	86 e0       	ldi	r24, 0x06	; 6
+ 364:	0e 94 54 01 	call	0x2a8	; 0x2a8 <LCD_CMD>
+ 368:	9f ef       	ldi	r25, 0xFF	; 255
+ 36a:	29 ef       	ldi	r18, 0xF9	; 249
+ 36c:	80 e0       	ldi	r24, 0x00	; 0
+ 36e:	91 50       	subi	r25, 0x01	; 1
+ 370:	20 40       	sbci	r18, 0x00	; 0
+ 372:	80 40       	sbci	r24, 0x00	; 0
+ 374:	e1 f7       	brne	.-8      	; 0x36e <initLCD8bits+0x84>
+ 376:	00 c0       	rjmp	.+0      	; 0x378 <initLCD8bits+0x8e>
+ 378:	00 00       	nop
+ 37a:	81 e0       	ldi	r24, 0x01	; 1
+ 37c:	0e 94 54 01 	call	0x2a8	; 0x2a8 <LCD_CMD>
+ 380:	08 95       	ret
+
+00000382 <LCD_Write_Char>:
+ 382:	95 b1       	in	r25, 0x05	; 5
+ 384:	98 60       	ori	r25, 0x08	; 8
+ 386:	95 b9       	out	0x05, r25	; 5
+ 388:	0e 94 0b 01 	call	0x216	; 0x216 <LCD_Port>
+ 38c:	85 b1       	in	r24, 0x05	; 5
+ 38e:	84 60       	ori	r24, 0x04	; 4
+ 390:	85 b9       	out	0x05, r24	; 5
+ 392:	85 e0       	ldi	r24, 0x05	; 5
+ 394:	8a 95       	dec	r24
+ 396:	f1 f7       	brne	.-4      	; 0x394 <LCD_Write_Char+0x12>
+ 398:	00 00       	nop
+ 39a:	85 b1       	in	r24, 0x05	; 5
+ 39c:	8b 7f       	andi	r24, 0xFB	; 251
+ 39e:	85 b9       	out	0x05, r24	; 5
+ 3a0:	8f e8       	ldi	r24, 0x8F	; 143
+ 3a2:	91 e0       	ldi	r25, 0x01	; 1
+ 3a4:	01 97       	sbiw	r24, 0x01	; 1
+ 3a6:	f1 f7       	brne	.-4      	; 0x3a4 <LCD_Write_Char+0x22>
+ 3a8:	00 c0       	rjmp	.+0      	; 0x3aa <LCD_Write_Char+0x28>
+ 3aa:	00 00       	nop
+ 3ac:	08 95       	ret
+
+000003ae <LCD_Write_String>:
+ 3ae:	0f 93       	push	r16
+ 3b0:	1f 93       	push	r17
+ 3b2:	cf 93       	push	r28
+ 3b4:	df 93       	push	r29
+ 3b6:	8c 01       	movw	r16, r24
+ 3b8:	c0 e0       	ldi	r28, 0x00	; 0
+ 3ba:	d0 e0       	ldi	r29, 0x00	; 0
+ 3bc:	03 c0       	rjmp	.+6      	; 0x3c4 <LCD_Write_String+0x16>
+ 3be:	0e 94 c1 01 	call	0x382	; 0x382 <LCD_Write_Char>
+ 3c2:	21 96       	adiw	r28, 0x01	; 1
+ 3c4:	f8 01       	movw	r30, r16
+ 3c6:	ec 0f       	add	r30, r28
+ 3c8:	fd 1f       	adc	r31, r29
+ 3ca:	80 81       	ld	r24, Z
+ 3cc:	81 11       	cpse	r24, r1
+ 3ce:	f7 cf       	rjmp	.-18     	; 0x3be <LCD_Write_String+0x10>
+ 3d0:	df 91       	pop	r29
+ 3d2:	cf 91       	pop	r28
+ 3d4:	1f 91       	pop	r17
+ 3d6:	0f 91       	pop	r16
+ 3d8:	08 95       	ret
+
+000003da <LCD_Set_Cursor>:
+
+//Establecer el cursor
+void LCD_Set_Cursor(char c, char f)
+{
+	char temp;
+	if (f==1)
+ 3da:	61 30       	cpi	r22, 0x01	; 1
+ 3dc:	19 f4       	brne	.+6      	; 0x3e4 <LCD_Set_Cursor+0xa>
+	{
+		temp = 0x80 + c - 1;
+ 3de:	9f e7       	ldi	r25, 0x7F	; 127
+ 3e0:	98 0f       	add	r25, r24
+ 3e2:	04 c0       	rjmp	.+8      	; 0x3ec <LCD_Set_Cursor+0x12>
+	}
+	else if (f == 2)
+ 3e4:	62 30       	cpi	r22, 0x02	; 2
+ 3e6:	11 f4       	brne	.+4      	; 0x3ec <LCD_Set_Cursor+0x12>
+	{
+		temp = 0xC0 + c - 1;
+ 3e8:	9f eb       	ldi	r25, 0xBF	; 191
+ 3ea:	98 0f       	add	r25, r24
+	}
+	LCD_CMD(temp);
+ 3ec:	89 2f       	mov	r24, r25
+ 3ee:	0e 94 54 01 	call	0x2a8	; 0x2a8 <LCD_CMD>
+ 3f2:	08 95       	ret
+
+000003f4 <setup>:
+
+	// Bit 0 ? PORTD2 (LSB)
+	if (valor & (1 << 0))
+	PORTD |= (1 << PORTD2);
+	else
+	PORTD &= ~(1 << PORTD2);
+ 3f4:	78 94       	sei
+ 3f6:	08 95       	ret
+
+000003f8 <convertir_3_digitos>:
+}
+
+void convertir_3_digitos(uint16_t numero, char *c, char *d, char *u) //Para que la función devuelva más de un dato se necesita emplear punteros
+{
+ 3f8:	cf 92       	push	r12
+ 3fa:	df 92       	push	r13
+ 3fc:	ef 92       	push	r14
+ 3fe:	ff 92       	push	r15
+ 400:	0f 93       	push	r16
+ 402:	1f 93       	push	r17
+ 404:	cf 93       	push	r28
+ 406:	df 93       	push	r29
+ 408:	fc 01       	movw	r30, r24
+ 40a:	eb 01       	movw	r28, r22
+ 40c:	89 01       	movw	r16, r18
+	//Con el puntero me permite guardar el valor en la dirección que le indico, dicha dirección es la variable para cada contador
+	*c = '0';
+ 40e:	80 e3       	ldi	r24, 0x30	; 48
+ 410:	88 83       	st	Y, r24
+	*d = '0';
+ 412:	da 01       	movw	r26, r20
+ 414:	8c 93       	st	X, r24
+	*u = '0';
+ 416:	d9 01       	movw	r26, r18
+ 418:	8c 93       	st	X, r24
+
+	if (numero >= 100) { // Lo separa en centenas
+ 41a:	e4 36       	cpi	r30, 0x64	; 100
+ 41c:	f1 05       	cpc	r31, r1
+ 41e:	c0 f0       	brcs	.+48     	; 0x450 <__EEPROM_REGION_LENGTH__+0x50>
+		*c = (numero / 100) + '0';
+ 420:	6f 01       	movw	r12, r30
+ 422:	d6 94       	lsr	r13
+ 424:	c7 94       	ror	r12
+ 426:	d6 94       	lsr	r13
+ 428:	c7 94       	ror	r12
+ 42a:	96 01       	movw	r18, r12
+ 42c:	ab e7       	ldi	r26, 0x7B	; 123
+ 42e:	b4 e1       	ldi	r27, 0x14	; 20
+ 430:	0e 94 e3 02 	call	0x5c6	; 0x5c6 <__umulhisi3>
+ 434:	7c 01       	movw	r14, r24
+ 436:	f6 94       	lsr	r15
+ 438:	e7 94       	ror	r14
+ 43a:	80 e3       	ldi	r24, 0x30	; 48
+ 43c:	8e 0d       	add	r24, r14
+ 43e:	88 83       	st	Y, r24
+		numero %= 100;
+ 440:	24 e6       	ldi	r18, 0x64	; 100
+ 442:	2e 9d       	mul	r18, r14
+ 444:	c0 01       	movw	r24, r0
+ 446:	2f 9d       	mul	r18, r15
+ 448:	90 0d       	add	r25, r0
+ 44a:	11 24       	eor	r1, r1
+ 44c:	e8 1b       	sub	r30, r24
+ 44e:	f9 0b       	sbc	r31, r25
+	}
+
+	if (numero >= 10) { // Lo separa en decenas
+ 450:	ea 30       	cpi	r30, 0x0A	; 10
+ 452:	f1 05       	cpc	r31, r1
+ 454:	e8 f0       	brcs	.+58     	; 0x490 <__EEPROM_REGION_LENGTH__+0x90>
+		*d = (numero / 10) + '0';
+ 456:	9f 01       	movw	r18, r30
+ 458:	ad ec       	ldi	r26, 0xCD	; 205
+ 45a:	bc ec       	ldi	r27, 0xCC	; 204
+ 45c:	0e 94 e3 02 	call	0x5c6	; 0x5c6 <__umulhisi3>
+ 460:	ec 01       	movw	r28, r24
+ 462:	d6 95       	lsr	r29
+ 464:	c7 95       	ror	r28
+ 466:	d6 95       	lsr	r29
+ 468:	c7 95       	ror	r28
+ 46a:	d6 95       	lsr	r29
+ 46c:	c7 95       	ror	r28
+ 46e:	8c 2f       	mov	r24, r28
+ 470:	80 5d       	subi	r24, 0xD0	; 208
+ 472:	da 01       	movw	r26, r20
+ 474:	8c 93       	st	X, r24
+		numero %= 10;
+ 476:	ce 01       	movw	r24, r28
+ 478:	88 0f       	add	r24, r24
+ 47a:	99 1f       	adc	r25, r25
+ 47c:	cc 0f       	add	r28, r28
+ 47e:	dd 1f       	adc	r29, r29
+ 480:	cc 0f       	add	r28, r28
+ 482:	dd 1f       	adc	r29, r29
+ 484:	cc 0f       	add	r28, r28
+ 486:	dd 1f       	adc	r29, r29
+ 488:	c8 0f       	add	r28, r24
+ 48a:	d9 1f       	adc	r29, r25
+ 48c:	ec 1b       	sub	r30, r28
+ 48e:	fd 0b       	sbc	r31, r29
+	}
+
+	*u = numero + '0';
+ 490:	e0 5d       	subi	r30, 0xD0	; 208
+ 492:	d8 01       	movw	r26, r16
+ 494:	ec 93       	st	X, r30
+	//A cada valor se le suma el CARACTER '0' debido a que 0 en ASCII es 48 y de esta forma iniciamos los dígitos desde 48
+}
+ 496:	df 91       	pop	r29
+ 498:	cf 91       	pop	r28
+ 49a:	1f 91       	pop	r17
+ 49c:	0f 91       	pop	r16
+ 49e:	ff 90       	pop	r15
+ 4a0:	ef 90       	pop	r14
+ 4a2:	df 90       	pop	r13
+ 4a4:	cf 90       	pop	r12
+ 4a6:	08 95       	ret
+
+000004a8 <main>:
+void cadena_texto(char* texto);
+
+//************************************************************************************
+// Main Function
+int main(void)
+{
+ 4a8:	cf 93       	push	r28
+ 4aa:	df 93       	push	r29
+ 4ac:	00 d0       	rcall	.+0      	; 0x4ae <main+0x6>
+ 4ae:	1f 92       	push	r1
+ 4b0:	cd b7       	in	r28, 0x3d	; 61
+ 4b2:	de b7       	in	r29, 0x3e	; 62
+	setup();
+ 4b4:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <setup>
+	initLCD8bits();
+ 4b8:	0e 94 75 01 	call	0x2ea	; 0x2ea <initLCD8bits>
+	//Puerto de salida para leds (en este caso sería el LCD)
+	
+	DDRB |= (1 << DDB5); //Inicializo led del arduino, esto solo me va a servir para ver si si se está comunicando 
+ 4bc:	84 b1       	in	r24, 0x04	; 4
+ 4be:	80 62       	ori	r24, 0x20	; 32
+ 4c0:	84 b9       	out	0x04, r24	; 4
+	PORTB &= ~(1 << PORTB5);
+ 4c2:	85 b1       	in	r24, 0x05	; 5
+ 4c4:	8f 7d       	andi	r24, 0xDF	; 223
+ 4c6:	85 b9       	out	0x05, r24	; 5
+	
+	I2C_Master_Init(100000, 1); //Inicializar como MAster F_SCL 100kHz, prescaler 1
+ 4c8:	41 e0       	ldi	r20, 0x01	; 1
+ 4ca:	60 ea       	ldi	r22, 0xA0	; 160
+ 4cc:	76 e8       	ldi	r23, 0x86	; 134
+ 4ce:	81 e0       	ldi	r24, 0x01	; 1
+ 4d0:	90 e0       	ldi	r25, 0x00	; 0
+ 4d2:	0e 94 53 00 	call	0xa6	; 0xa6 <I2C_Master_Init>
+	//En estas variables se guardan los números modificados por la función convertir_3_digitos
+	char s1_m, s1_c, s1_d, s1_u;
+	
+	while (1)
+	{
+		PORTB |= (1 << PORTB5); //Solo sirve para ver si está enviando datos
+ 4d6:	85 b1       	in	r24, 0x05	; 5
+ 4d8:	80 62       	ori	r24, 0x20	; 32
+ 4da:	85 b9       	out	0x05, r24	; 5
+		
+		if(!I2C_Master_Start()) return; //Si no recibe dato solo se regresa
+ 4dc:	0e 94 af 00 	call	0x15e	; 0x15e <I2C_Master_Start>
+ 4e0:	88 23       	and	r24, r24
+ 4e2:	09 f4       	brne	.+2      	; 0x4e6 <main+0x3e>
+ 4e4:	48 c0       	rjmp	.+144    	; 0x576 <main+0xce>
+		
+		if(!I2C_Master_Write(slave1W)){ //Mandar la dirección de escritura, si no recibo el ACK manda el stop
+ 4e6:	80 e6       	ldi	r24, 0x60	; 96
+ 4e8:	0e 94 d5 00 	call	0x1aa	; 0x1aa <I2C_Master_Write>
+ 4ec:	81 11       	cpse	r24, r1
+ 4ee:	03 c0       	rjmp	.+6      	; 0x4f6 <main+0x4e>
+			I2C_Master_Stop();
+ 4f0:	0e 94 cd 00 	call	0x19a	; 0x19a <I2C_Master_Stop>
+			return;
+ 4f4:	40 c0       	rjmp	.+128    	; 0x576 <main+0xce>
+		}
+		I2C_Master_Write('R'); //Comando para leer "te voy a leer"
+ 4f6:	82 e5       	ldi	r24, 0x52	; 82
+ 4f8:	0e 94 d5 00 	call	0x1aa	; 0x1aa <I2C_Master_Write>
+		
+		//Ahora configuro para leer
+		if (!I2C_Master_RepeatedStart()){ // Si no recibe nada reinicia
+ 4fc:	0e 94 be 00 	call	0x17c	; 0x17c <I2C_Master_RepeatedStart>
+ 500:	81 11       	cpse	r24, r1
+ 502:	03 c0       	rjmp	.+6      	; 0x50a <main+0x62>
+			I2C_Master_Stop();// SI no recibo nada termino la comunicación con return
+ 504:	0e 94 cd 00 	call	0x19a	; 0x19a <I2C_Master_Stop>
+			return;
+ 508:	36 c0       	rjmp	.+108    	; 0x576 <main+0xce>
+		}
+		if(!I2C_Master_Write(slave1R)){ //Si si se da la comunicación entonces leer 
+ 50a:	81 e6       	ldi	r24, 0x61	; 97
+ 50c:	0e 94 d5 00 	call	0x1aa	; 0x1aa <I2C_Master_Write>
+ 510:	81 11       	cpse	r24, r1
+ 512:	03 c0       	rjmp	.+6      	; 0x51a <main+0x72>
+			I2C_Master_Stop();
+ 514:	0e 94 cd 00 	call	0x19a	; 0x19a <I2C_Master_Stop>
+			return;
+ 518:	2e c0       	rjmp	.+92     	; 0x576 <main+0xce>
+		}
+		//Esto se ejecuta en el caso que si se da la comunicación
+		I2C_Master_Read(&bufferI2C, 0); //Esto es solo para recibir un solo byte de info ya que no se manda ACK
+ 51a:	60 e0       	ldi	r22, 0x00	; 0
+ 51c:	84 e0       	ldi	r24, 0x04	; 4
+ 51e:	91 e0       	ldi	r25, 0x01	; 1
+ 520:	0e 94 e9 00 	call	0x1d2	; 0x1d2 <I2C_Master_Read>
+		//Esto es para recopilar varios bytes ya que si se manda ACK
+		//I2C_Master_Read(&bufferI2C1, 1);
+		//I2C_Master_Read(&bufferI2C2, 1);
+		//I2C_Master_Read(&bufferI2C3, 1);
+		
+		I2C_Master_Stop(); //Finalizamos
+ 524:	0e 94 cd 00 	call	0x19a	; 0x19a <I2C_Master_Stop>
+		
+		PORTB &= ~(1 << PORTB5); //Apago el led para indicar que ya no hay comunicación
+ 528:	85 b1       	in	r24, 0x05	; 5
+ 52a:	8f 7d       	andi	r24, 0xDF	; 223
+ 52c:	85 b9       	out	0x05, r24	; 5
+		
+		//refreshPORT(bufferI2C); //Muestro los valores
+		
+		convertir_3_digitos(bufferI2C, &s1_c, &s1_d, &s1_u);
+ 52e:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <__data_end>
+ 532:	9e 01       	movw	r18, r28
+ 534:	2d 5f       	subi	r18, 0xFD	; 253
+ 536:	3f 4f       	sbci	r19, 0xFF	; 255
+ 538:	ae 01       	movw	r20, r28
+ 53a:	4e 5f       	subi	r20, 0xFE	; 254
+ 53c:	5f 4f       	sbci	r21, 0xFF	; 255
+ 53e:	be 01       	movw	r22, r28
+ 540:	6f 5f       	subi	r22, 0xFF	; 255
+ 542:	7f 4f       	sbci	r23, 0xFF	; 255
+ 544:	90 e0       	ldi	r25, 0x00	; 0
+ 546:	0e 94 fc 01 	call	0x3f8	; 0x3f8 <convertir_3_digitos>
+		
+		LCD_Set_Cursor(1,1);
+ 54a:	61 e0       	ldi	r22, 0x01	; 1
+ 54c:	81 e0       	ldi	r24, 0x01	; 1
+ 54e:	0e 94 ed 01 	call	0x3da	; 0x3da <LCD_Set_Cursor>
+		LCD_Write_String("S1:");
+ 552:	80 e0       	ldi	r24, 0x00	; 0
+ 554:	91 e0       	ldi	r25, 0x01	; 1
+ 556:	0e 94 d7 01 	call	0x3ae	; 0x3ae <LCD_Write_String>
+
+		LCD_Set_Cursor(1,2);
+ 55a:	62 e0       	ldi	r22, 0x02	; 2
+ 55c:	81 e0       	ldi	r24, 0x01	; 1
+ 55e:	0e 94 ed 01 	call	0x3da	; 0x3da <LCD_Set_Cursor>
+		LCD_Write_Char(s1_c);
+ 562:	89 81       	ldd	r24, Y+1	; 0x01
+ 564:	0e 94 c1 01 	call	0x382	; 0x382 <LCD_Write_Char>
+		LCD_Write_Char(s1_d);
+ 568:	8a 81       	ldd	r24, Y+2	; 0x02
+ 56a:	0e 94 c1 01 	call	0x382	; 0x382 <LCD_Write_Char>
+		LCD_Write_Char(s1_u);
+ 56e:	8b 81       	ldd	r24, Y+3	; 0x03
+ 570:	0e 94 c1 01 	call	0x382	; 0x382 <LCD_Write_Char>
+		
+	}
+ 574:	b0 cf       	rjmp	.-160    	; 0x4d6 <main+0x2e>
+}
+ 576:	0f 90       	pop	r0
+ 578:	0f 90       	pop	r0
+ 57a:	0f 90       	pop	r0
+ 57c:	df 91       	pop	r29
+ 57e:	cf 91       	pop	r28
+ 580:	08 95       	ret
+
+00000582 <__udivmodsi4>:
+ 582:	a1 e2       	ldi	r26, 0x21	; 33
+ 584:	1a 2e       	mov	r1, r26
+ 586:	aa 1b       	sub	r26, r26
+ 588:	bb 1b       	sub	r27, r27
+ 58a:	fd 01       	movw	r30, r26
+ 58c:	0d c0       	rjmp	.+26     	; 0x5a8 <__udivmodsi4_ep>
+
+0000058e <__udivmodsi4_loop>:
+ 58e:	aa 1f       	adc	r26, r26
+ 590:	bb 1f       	adc	r27, r27
+ 592:	ee 1f       	adc	r30, r30
+ 594:	ff 1f       	adc	r31, r31
+ 596:	a2 17       	cp	r26, r18
+ 598:	b3 07       	cpc	r27, r19
+ 59a:	e4 07       	cpc	r30, r20
+ 59c:	f5 07       	cpc	r31, r21
+ 59e:	20 f0       	brcs	.+8      	; 0x5a8 <__udivmodsi4_ep>
+ 5a0:	a2 1b       	sub	r26, r18
+ 5a2:	b3 0b       	sbc	r27, r19
+ 5a4:	e4 0b       	sbc	r30, r20
+ 5a6:	f5 0b       	sbc	r31, r21
+
+000005a8 <__udivmodsi4_ep>:
+ 5a8:	66 1f       	adc	r22, r22
+ 5aa:	77 1f       	adc	r23, r23
+ 5ac:	88 1f       	adc	r24, r24
+ 5ae:	99 1f       	adc	r25, r25
+ 5b0:	1a 94       	dec	r1
+ 5b2:	69 f7       	brne	.-38     	; 0x58e <__udivmodsi4_loop>
+ 5b4:	60 95       	com	r22
+ 5b6:	70 95       	com	r23
+ 5b8:	80 95       	com	r24
+ 5ba:	90 95       	com	r25
+ 5bc:	9b 01       	movw	r18, r22
+ 5be:	ac 01       	movw	r20, r24
+ 5c0:	bd 01       	movw	r22, r26
+ 5c2:	cf 01       	movw	r24, r30
+ 5c4:	08 95       	ret
+
+000005c6 <__umulhisi3>:
+ 5c6:	a2 9f       	mul	r26, r18
+ 5c8:	b0 01       	movw	r22, r0
+ 5ca:	b3 9f       	mul	r27, r19
+ 5cc:	c0 01       	movw	r24, r0
+ 5ce:	a3 9f       	mul	r26, r19
+ 5d0:	70 0d       	add	r23, r0
+ 5d2:	81 1d       	adc	r24, r1
+ 5d4:	11 24       	eor	r1, r1
+ 5d6:	91 1d       	adc	r25, r1
+ 5d8:	b2 9f       	mul	r27, r18
+ 5da:	70 0d       	add	r23, r0
+ 5dc:	81 1d       	adc	r24, r1
+ 5de:	11 24       	eor	r1, r1
+ 5e0:	91 1d       	adc	r25, r1
+ 5e2:	08 95       	ret
+
+000005e4 <_exit>:
+ 5e4:	f8 94       	cli
+
+000005e6 <__stop_program>:
+ 5e6:	ff cf       	rjmp	.-2      	; 0x5e6 <__stop_program>
