@@ -14,9 +14,9 @@
 #include <stdint.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-#include "I2C_conf.h"
-#include "LCD_control.h"
-#include "initUART.h"
+#include "I2C_conf/I2C_conf.h"
+#include "LCD_control/LCD_control.h"
+#include "initUART/initUART.h"
 
 #define slave1 0x30
 #define slave2 0x40
@@ -91,7 +91,7 @@ int main(void)
 		convertir_3_digitos(bufferI2C, &s1_c, &s1_d, &s1_u);
 		
 		LCD_Set_Cursor(1,1);
-		LCD_Write_String("S1:");
+		LCD_Write_String("Dis:");
 
 		LCD_Set_Cursor(1,2);
 		LCD_Write_Char(s1_c);
@@ -121,57 +121,6 @@ void cadena_texto(char* texto) {
 	}
 }
 
-void refreshPORT(uint8_t valor)
-{
-	// Bit 7 ? PORTB1 (MSB)
-	if (valor & (1 << 7))
-	PORTB |= (1 << PORTB1);
-	else
-	PORTB &= ~(1 << PORTB1);
-
-	// Bit 6 ? PORTB0
-	if (valor & (1 << 6))
-	PORTB |= (1 << PORTB0);
-	else
-	PORTB &= ~(1 << PORTB0);
-
-	// Bit 5 ? PORTD7
-	if (valor & (1 << 5))
-	PORTD |= (1 << PORTD7);
-	else
-	PORTD &= ~(1 << PORTD7);
-
-	// Bit 4 ? PORTD6
-	if (valor & (1 << 4))
-	PORTD |= (1 << PORTD6);
-	else
-	PORTD &= ~(1 << PORTD6);
-
-	// Bit 3 ? PORTD5
-	if (valor & (1 << 3))
-	PORTD |= (1 << PORTD5);
-	else
-	PORTD &= ~(1 << PORTD5);
-
-	// Bit 2 ? PORTD4
-	if (valor & (1 << 2))
-	PORTD |= (1 << PORTD4);
-	else
-	PORTD &= ~(1 << PORTD4);
-
-	// Bit 1 ? PORTD3
-	if (valor & (1 << 1))
-	PORTD |= (1 << PORTD3);
-	else
-	PORTD &= ~(1 << PORTD3);
-
-	// Bit 0 ? PORTD2 (LSB)
-	if (valor & (1 << 0))
-	PORTD |= (1 << PORTD2);
-	else
-	PORTD &= ~(1 << PORTD2);
-}
-
 void convertir_3_digitos(uint16_t numero, char *c, char *d, char *u) //Para que la función devuelva más de un dato se necesita emplear punteros
 {
 	//Con el puntero me permite guardar el valor en la dirección que le indico, dicha dirección es la variable para cada contador
@@ -195,3 +144,151 @@ void convertir_3_digitos(uint16_t numero, char *c, char *d, char *u) //Para que 
 
 //************************************************************************************
 // Interrupt subroutines
+
+/*
+
+//========================= ENCABEZADOS =========================
+#define F_CPU 16000000
+
+#include <avr/io.h>
+#include <stdint.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+
+#include "I2C_conf/I2C_conf.h"
+#include "LCD_control/LCD_control.h"
+
+//========================= DIRECCIONES =========================
+#define SLAVE1  0x30
+#define SLAVE2  0x40
+
+#define SLA_W(addr)   ((addr << 1) | 0)
+#define SLA_R(addr)   ((addr << 1) | 1)
+
+//========================= PROTOTIPOS ==========================
+void setup(void);
+uint8_t leer_esclavo(uint8_t addr, uint8_t *dato);
+uint8_t enviar_motor(uint8_t addr, uint8_t motor);
+void convertir_3_digitos(uint16_t numero, char *c, char *d, char *u);
+
+//========================= MAIN ================================
+int main(void)
+{
+	setup();
+	initLCD8bits();
+
+	DDRB |= (1 << DDB5);   // LED debug
+	PORTB &= ~(1 << PORTB5);
+
+	I2C_Master_Init(100000, 1); // 100kHz
+
+	char c, d, u;
+	uint8_t distancia1 = 0;
+	uint8_t distancia2 = 0;
+
+	while (1)
+	{
+		PORTB |= (1 << PORTB5);
+
+		//=========== LEER ESCLAVO 1 ===========
+		if (leer_esclavo(SLAVE1, &distancia1))
+		{
+			convertir_3_digitos(distancia1, &c, &d, &u);
+
+			LCD_Set_Cursor(1,1);
+			LCD_Write_String("S1:");
+
+			LCD_Set_Cursor(1,2);
+			LCD_Write_Char(c);
+			LCD_Write_Char(d);
+			LCD_Write_Char(u);
+		}
+
+		_delay_ms(5);
+
+		//=========== LEER ESCLAVO 2 ===========
+		if (leer_esclavo(SLAVE2, &distancia2))
+		{
+			convertir_3_digitos(distancia2, &c, &d, &u);
+
+			LCD_Set_Cursor(9,1);
+			LCD_Write_String("S2:");
+
+			LCD_Set_Cursor(9,2);
+			LCD_Write_Char(c);
+			LCD_Write_Char(d);
+			LCD_Write_Char(u);
+		}
+
+		_delay_ms(5);
+
+		//=========== ENVIAR COMANDO MOTOR ===========
+		enviar_motor(SLAVE1, 1);   // motor ON esclavo 1
+		//_delay_ms(500);
+		//enviar_motor(SLAVE1, 0);   // motor OFF esclavo 1
+
+		PORTB &= ~(1 << PORTB5);
+		_delay_ms(500);
+	}
+}
+
+//========================= FUNCIONES ============================
+
+void setup(void)
+{
+	sei();
+}
+
+//----------- LEER DISTANCIA -----------
+uint8_t leer_esclavo(uint8_t addr, uint8_t *dato)
+{
+	if (!I2C_Master_Start()) goto error;
+	if (!I2C_Master_Write(SLA_W(addr))) goto error;
+	if (!I2C_Master_Write('R')) goto error;
+
+	if (!I2C_Master_RepeatedStart()) goto error;
+	if (!I2C_Master_Write(SLA_R(addr))) goto error;
+
+	I2C_Master_Read(dato, 0); // 1 byte, NACK
+	I2C_Master_Stop();
+	return 1;
+
+	error:
+	I2C_Master_Stop();
+	return 0;
+}
+
+//----------- ENVIAR COMANDO MOTOR -----------
+uint8_t enviar_motor(uint8_t addr, uint8_t motor)
+{
+	if (!I2C_Master_Start()) goto error;
+	if (!I2C_Master_Write(SLA_W(addr))) goto error;
+	if (!I2C_Master_Write('M')) goto error;
+	if (!I2C_Master_Write(motor)) goto error;
+
+	I2C_Master_Stop();
+	return 1;
+
+	error:
+	I2C_Master_Stop();
+	return 0;
+}
+
+//----------- CONVERTIR A ASCII -----------
+void convertir_3_digitos(uint16_t numero, char *c, char *d, char *u)
+{
+	*c = '0';
+	*d = '0';
+	*u = '0';
+
+	if (numero >= 100) {
+		*c = (numero / 100) + '0';
+		numero %= 100;
+	}
+	if (numero >= 10) {
+		*d = (numero / 10) + '0';
+		numero %= 10;
+	}
+	*u = numero + '0';
+}
+*/

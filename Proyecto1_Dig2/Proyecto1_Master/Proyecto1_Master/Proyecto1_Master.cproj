@@ -126,27 +126,32 @@
     <Compile Include="CONF_ADC.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="I2C_conf.c">
+    <Compile Include="I2C_conf\I2C_conf.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="I2C_conf.h">
+    <Compile Include="I2C_conf\I2C_conf.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="initUART.c">
+    <Compile Include="initUART\initUART.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="initUART.h">
+    <Compile Include="initUART\initUART.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="LCD_control.c">
+    <Compile Include="LCD_control\LCD_control.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="LCD_control.h">
+    <Compile Include="LCD_control\LCD_control.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="initUART" />
+    <Folder Include="I2C_conf" />
+    <Folder Include="LCD_control" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

@@ -33,17 +33,16 @@ LINKER_SCRIPT_DEP:=
 
 # Every subdirectory with source files must be described here
 SUBDIRS :=  \
-../initUART \
+../CONF_PWM \
 ../I2C_conf \
-../LCD_control
+../initUART
 
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
-../CONF_ADC.c \
+../CONF_PWM/CONF_PWM.c \
 ../I2C_conf/I2C_conf.c \
 ../initUART/initUART.c \
-../LCD_control/LCD_control.c \
 ../main.c
 
 
@@ -54,36 +53,32 @@ ASM_SRCS +=
 
 
 OBJS +=  \
-CONF_ADC.o \
+CONF_PWM/CONF_PWM.o \
 I2C_conf/I2C_conf.o \
 initUART/initUART.o \
-LCD_control/LCD_control.o \
 main.o
 
 OBJS_AS_ARGS +=  \
-CONF_ADC.o \
+CONF_PWM/CONF_PWM.o \
 I2C_conf/I2C_conf.o \
 initUART/initUART.o \
-LCD_control/LCD_control.o \
 main.o
 
 C_DEPS +=  \
-CONF_ADC.d \
+CONF_PWM/CONF_PWM.d \
 I2C_conf/I2C_conf.d \
 initUART/initUART.d \
-LCD_control/LCD_control.d \
 main.d
 
 C_DEPS_AS_ARGS +=  \
-CONF_ADC.d \
+CONF_PWM/CONF_PWM.d \
 I2C_conf/I2C_conf.d \
 initUART/initUART.d \
-LCD_control/LCD_control.d \
 main.d
 
-OUTPUT_FILE_PATH +=Proyecto1_Master.elf
+OUTPUT_FILE_PATH +=Slave_sensor_ultrasonico.elf
 
-OUTPUT_FILE_PATH_AS_ARGS +=Proyecto1_Master.elf
+OUTPUT_FILE_PATH_AS_ARGS +=Slave_sensor_ultrasonico.elf
 
 ADDITIONAL_DEPENDENCIES:=
 
@@ -95,7 +90,7 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
-./CONF_ADC.o: .././CONF_ADC.c
+CONF_PWM/CONF_PWM.o: ../CONF_PWM/CONF_PWM.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
@@ -110,13 +105,6 @@ I2C_conf/I2C_conf.o: ../I2C_conf/I2C_conf.c
 	
 
 initUART/initUART.o: ../initUART/initUART.c
-	@echo Building file: $<
-	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
-	@echo Finished building: $<
-	
-
-LCD_control/LCD_control.o: ../LCD_control/LCD_control.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
@@ -156,13 +144,13 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER_SCRIPT_DEP)
 	@echo Building target: $@
 	@echo Invoking: AVR/GNU Linker : 5.4.0
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="Proyecto1_Master.map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega328p"  
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="Slave_sensor_ultrasonico.map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega328p"  
 	@echo Finished building target: $@
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "Proyecto1_Master.elf" "Proyecto1_Master.hex"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "Proyecto1_Master.elf" "Proyecto1_Master.eep" || exit 0
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "Proyecto1_Master.elf" > "Proyecto1_Master.lss"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "Proyecto1_Master.elf" "Proyecto1_Master.srec"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-size.exe" "Proyecto1_Master.elf"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "Slave_sensor_ultrasonico.elf" "Slave_sensor_ultrasonico.hex"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "Slave_sensor_ultrasonico.elf" "Slave_sensor_ultrasonico.eep" || exit 0
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "Slave_sensor_ultrasonico.elf" > "Slave_sensor_ultrasonico.lss"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "Slave_sensor_ultrasonico.elf" "Slave_sensor_ultrasonico.srec"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-size.exe" "Slave_sensor_ultrasonico.elf"
 	
 	
 
@@ -174,5 +162,5 @@ $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER
 clean:
 	-$(RM) $(OBJS_AS_ARGS) $(EXECUTABLES)  
 	-$(RM) $(C_DEPS_AS_ARGS)   
-	rm -rf "Proyecto1_Master.elf" "Proyecto1_Master.a" "Proyecto1_Master.hex" "Proyecto1_Master.lss" "Proyecto1_Master.eep" "Proyecto1_Master.map" "Proyecto1_Master.srec" "Proyecto1_Master.usersignatures"
+	rm -rf "Slave_sensor_ultrasonico.elf" "Slave_sensor_ultrasonico.a" "Slave_sensor_ultrasonico.hex" "Slave_sensor_ultrasonico.lss" "Slave_sensor_ultrasonico.eep" "Slave_sensor_ultrasonico.map" "Slave_sensor_ultrasonico.srec" "Slave_sensor_ultrasonico.usersignatures"
 	

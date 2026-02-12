@@ -3,31 +3,31 @@ Proyecto1_Master.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000004  00800100  000005e8  0000067c  2**0
+  0 .data         00000006  00800100  000005e8  0000067c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
   1 .text         000005e8  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000001  00800104  00800104  00000680  2**0
+  2 .bss          00000001  00800106  00800106  00000682  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000680  2**0
+  3 .comment      00000030  00000000  00000000  00000682  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000006b0  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000006b4  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000f0  00000000  00000000  000006f0  2**0
+  5 .debug_aranges 000000e8  00000000  00000000  000006f4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000010d6  00000000  00000000  000007e0  2**0
+  6 .debug_info   000010ac  00000000  00000000  000007dc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000957  00000000  00000000  000018b6  2**0
+  7 .debug_abbrev 00000957  00000000  00000000  00001888  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000009ec  00000000  00000000  0000220d  2**0
+  8 .debug_line   0000097b  00000000  00000000  000021df  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000001f4  00000000  00000000  00002bfc  2**2
+  9 .debug_frame  000001e4  00000000  00000000  00002b5c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000587  00000000  00000000  00002df0  2**0
+ 10 .debug_str    00000586  00000000  00000000  00002d40  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000007de  00000000  00000000  00003377  2**0
+ 11 .debug_loc    000007a4  00000000  00000000  000032c6  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000c0  00000000  00000000  00003b55  2**0
+ 12 .debug_ranges 000000b8  00000000  00000000  00003a6a  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -77,13 +77,13 @@ Disassembly of section .text:
   7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
   80:	05 90       	lpm	r0, Z+
   82:	0d 92       	st	X+, r0
-  84:	a4 30       	cpi	r26, 0x04	; 4
+  84:	a6 30       	cpi	r26, 0x06	; 6
   86:	b1 07       	cpc	r27, r17
   88:	d9 f7       	brne	.-10     	; 0x80 <__do_copy_data+0xc>
 
 0000008a <__do_clear_bss>:
   8a:	21 e0       	ldi	r18, 0x01	; 1
-  8c:	a4 e0       	ldi	r26, 0x04	; 4
+  8c:	a6 e0       	ldi	r26, 0x06	; 6
   8e:	b1 e0       	ldi	r27, 0x01	; 1
   90:	01 c0       	rjmp	.+2      	; 0x94 <.do_clear_bss_start>
 
@@ -91,7 +91,7 @@ Disassembly of section .text:
   92:	1d 92       	st	X+, r1
 
 00000094 <.do_clear_bss_start>:
-  94:	a5 30       	cpi	r26, 0x05	; 5
+  94:	a7 30       	cpi	r26, 0x07	; 7
   96:	b2 07       	cpc	r27, r18
   98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
   9a:	0e 94 54 02 	call	0x4a8	; 0x4a8 <main>
@@ -650,17 +650,16 @@ void LCD_Set_Cursor(char c, char f)
  3f2:	08 95       	ret
 
 000003f4 <setup>:
-
-	// Bit 0 ? PORTD2 (LSB)
-	if (valor & (1 << 0))
-	PORTD |= (1 << PORTD2);
-	else
-	PORTD &= ~(1 << PORTD2);
+void cadena_texto(char* texto) {
+	while (*texto != '\0') {
+		writeChar(*texto);
+		texto++;
+	}
+}
  3f4:	78 94       	sei
  3f6:	08 95       	ret
 
 000003f8 <convertir_3_digitos>:
-}
 
 void convertir_3_digitos(uint16_t numero, char *c, char *d, char *u) //Para que la función devuelva más de un dato se necesita emplear punteros
 {
@@ -857,7 +856,7 @@ int main(void)
 		//Esto se ejecuta en el caso que si se da la comunicación
 		I2C_Master_Read(&bufferI2C, 0); //Esto es solo para recibir un solo byte de info ya que no se manda ACK
  51a:	60 e0       	ldi	r22, 0x00	; 0
- 51c:	84 e0       	ldi	r24, 0x04	; 4
+ 51c:	86 e0       	ldi	r24, 0x06	; 6
  51e:	91 e0       	ldi	r25, 0x01	; 1
  520:	0e 94 e9 00 	call	0x1d2	; 0x1d2 <I2C_Master_Read>
 		//Esto es para recopilar varios bytes ya que si se manda ACK
@@ -876,7 +875,7 @@ int main(void)
 		//refreshPORT(bufferI2C); //Muestro los valores
 		
 		convertir_3_digitos(bufferI2C, &s1_c, &s1_d, &s1_u);
- 52e:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <__data_end>
+ 52e:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <__data_end>
  532:	9e 01       	movw	r18, r28
  534:	2d 5f       	subi	r18, 0xFD	; 253
  536:	3f 4f       	sbci	r19, 0xFF	; 255
@@ -893,7 +892,7 @@ int main(void)
  54a:	61 e0       	ldi	r22, 0x01	; 1
  54c:	81 e0       	ldi	r24, 0x01	; 1
  54e:	0e 94 ed 01 	call	0x3da	; 0x3da <LCD_Set_Cursor>
-		LCD_Write_String("S1:");
+		LCD_Write_String("Dis:");
  552:	80 e0       	ldi	r24, 0x00	; 0
  554:	91 e0       	ldi	r25, 0x01	; 1
  556:	0e 94 d7 01 	call	0x3ae	; 0x3ae <LCD_Write_String>

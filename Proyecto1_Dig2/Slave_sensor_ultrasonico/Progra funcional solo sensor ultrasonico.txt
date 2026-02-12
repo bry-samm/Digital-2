@@ -1,0 +1,157 @@
+*
+ * Slave_sensor_ultrasonico.c
+ * 
+ * Created:
+ * Author:
+ * Description: Código para el arduino esclavo que realiza la lectura del sensor ultrasonico
+ * En este código estare usando INPUT CARE el cual es un hardware dentro del Timer1 que detecta flancos en un pin especial ICPI (PB0)
+ */
+//************************************************************************************
+// Encabezado (librerías)
+#include <util/delay.h>
+#include <avr/io.h>
+#include <stdio.h>
+#include <avr/interrupt.h>
+#include "initUART.h"
+
+uint16_t last_distance = 0;
+uint16_t ticks;
+//************************************************************************************
+// Function prototypes
+void setup();
+void writeChar(char caracter);
+void cadena_texto(char* texto);
+
+void trigger_ultrasonic(void);
+uint8_t measure_echo(uint16_t *ticks_out);
+void inicializar_pulso(void);
+
+void convertir_3_digitos(uint16_t numero, char *c, char *d, char *u);
+//************************************************************************************
+// Main Function
+int main(void) {
+	setup();
+	// Variables para el sensor ultrasonico
+	char s1_c, s1_d, s1_u;
+	inicializar_pulso();
+	PORTD &= ~(1 << PORTD3);
+	PORTD &= ~(1 << PORTD2);
+	
+    while (1) {
+
+	    trigger_ultrasonic();
+	    if (measure_echo(&ticks)) {
+		    // Solo si hay nueva medición
+		    float distancia_cm = (ticks * 0.5) / 58.0;
+		    last_distance = (uint16_t)distancia_cm;
+	    }
+
+	    // SIEMPRE se muestra el último valor válido
+	    convertir_3_digitos(last_distance, &s1_c, &s1_d, &s1_u);
+	    cadena_texto("Distancia: ");
+	    writeChar(s1_c);
+	    writeChar(s1_d);
+	    writeChar(s1_u);
+	    cadena_texto("\n");
+
+	    _delay_ms(1000);
+    }
+}
+
+//************************************************************************************
+// NON-INterrupt subroutines
+void setup(){
+	initUART();
+	sei();
+}
+//Función para poder enviar caracteres
+void writeChar(char caracter){
+	while ((UCSR0A & (1 << UDRE0)) == 0); //Indica si aun sigue ocupado la transmisión de datos
+	UDR0 = caracter;	//Escribe la información en este registro
+}
+
+//Empleamos un puntero para ir mandando cada caracter del string
+void cadena_texto(char* texto) {
+	while (*texto != '\0') {
+		writeChar(*texto);
+		texto++;
+	}
+}
+
+void convertir_3_digitos(uint16_t numero, char *c, char *d, char *u) //Para que la función devuelva más de un dato se necesita emplear punteros
+{
+	//Con el puntero me permite guardar el valor en la dirección que le indico, dicha dirección es la variable para cada contador
+	*c = '0';
+	*d = '0';
+	*u = '0';
+
+	if (numero >= 100) { // Lo separa en centenas
+		*c = (numero / 100) + '0';
+		numero %= 100;
+	}
+
+	if (numero >= 10) { // Lo separa en decenas
+		*d = (numero / 10) + '0';
+		numero %= 10;
+	}
+
+	*u = numero + '0';
+	//A cada valor se le suma el CARACTER '0' debido a que 0 en ASCII es 48 y de esta forma iniciamos los dígitos desde 48
+}
+
+// TRIG = PD2
+// ECHO = PD3
+
+void trigger_ultrasonic(void) {
+	PORTD |= (1 << PORTD2);
+	_delay_us(10);
+	PORTD &= ~(1 << PORTD2);
+}
+
+uint8_t measure_echo(uint16_t *ticks_out) {
+	uint32_t timeout;
+
+	// 1️⃣ Asegurar ECHO en bajo
+	timeout = 300000UL;
+	while (PIND & (1 << PORTD3)) {
+		if (--timeout == 0) return 0;
+	}
+
+	// 2️⃣ Esperar flanco de subida
+	timeout = 300000UL;
+	while (!(PIND & (1 << PORTD3))) {
+		if (--timeout == 0) return 0;
+	}
+
+	TCNT1 = 0;
+	TCCR1B = (1 << CS11);
+
+	// 3️⃣ Esperar flanco de bajada
+	timeout = 300000UL;
+	while (PIND & (1 << PORTD3)) {
+		if (--timeout == 0) {
+			TCCR1B = 0;
+			return 0;
+		}
+	}
+
+	TCCR1B = 0;
+	*ticks_out = TCNT1;
+	return 1;
+}
+
+
+
+void inicializar_pulso(void)
+{
+	DDRD |= (1 << PORTD2);    // TRIG como salida
+	DDRD &= ~(1 << PORTD3);   // ECHO como entrada
+	TCCR1A = 0;
+	TCCR1B = 0;
+	TCNT1  = 0;
+}
+
+//************************************************************************************
+// Interrupt subroutines
+
+
