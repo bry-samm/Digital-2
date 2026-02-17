@@ -1,4 +1,4 @@
-	/*
+/*
  * Slave_sensor_ultrasonico.c
  * 
  * Created:
@@ -12,7 +12,6 @@
 // Para ver conexión (ver grabación clase 1:15:16)
 // Para calcular valor (ver modulos de clase)
 
-/*
 // Encabezado (librerías)
 #include <avr/io.h>
 #include <stdint.h>
@@ -23,103 +22,227 @@
 
 //Se define la dirección del esclavo, en este caso como es mi programa yo decido que dirección tiene
 // caso contrario cuando se trabaja con un sensor, se debe de colocar la dirección descrita por el datasheet del sensor
-#define SlaveAddress 0x30
+#define SlaveAddress 0x40
 
-uint8_t buffer = 0;
-uint16_t last_distance = 0;
+volatile uint8_t buffer = 0;
 uint16_t ticks;
+uint8_t led_state;
+volatile uint16_t contador = 0;
+
+volatile uint16_t tiempo_inicio = 0;
+volatile uint16_t tiempo_fin = 0;
+volatile uint8_t captura_estado = 0;
+volatile uint16_t last_distance = 0;
+static uint16_t last_trigger = 0;
+
 //************************************************************************************
 // Function prototypes
 void trigger_ultrasonic(void);
-uint8_t measure_echo(uint16_t *ticks_out);
-void inicializar_pulso(void);
+void init_ultrasonic_icp(void);
+void secuencia_leds(uint8_t activar);
+void setup(void);
 //************************************************************************************
 // Main Function
 int main(void)
 {
-	//Configuración para poder iniciar los pines trigger y echo del sensor
-	inicializar_pulso();
-	PORTD &= ~(1 << PORTD4);
-	PORTD &= ~(1 << PORTD5);
-	//********************************
-	
-	DDRB |= (1 << DDB5);
-	PORTB &= ~(1 << PORTB5); //Led para encender y apgar indicando una comunicación exitosa
-
-	//inicializar ADC
-	I2C_Slave_Init(SlaveAddress); //Se define la dirección del esclavo
-	
-	sei(); //Habilitar interrupciones
-	
+	setup();
 	while (1)
 	{
-		trigger_ultrasonic();
-		if (measure_echo(&ticks)) {
-			// Solo si hay nueva medición
-			float distancia_cm = (ticks * 0.5) / 58.0;
-			last_distance = (uint16_t)distancia_cm;
+		PORTB ^= (1 << PORTB5);
+		if (contador - last_trigger >= 110) {
+			trigger_ultrasonic();
+			last_trigger = contador;
 		}
-		
-		if(buffer == 'R'){ //Reviso si el caractér de lectura esta recibiendose
-			PINB |= (1 << PINB5); //Se hace un toggle para indicar que si hay datos 
+		//trigger_ultrasonic();
+		//_delay_ms(60);   // tiempo entre disparos
+
+		if (buffer == 'N'){
+			PORTC |= (1 << PORTC1);
+			OCR2A = 130;
+			secuencia_leds(1);
+			//secuencia_leds(1);
+			buffer = 0;
+		}else if (buffer == 'F'){
+			PORTC &= ~(1 << PORTC1);
+			OCR2A = 0;
+			secuencia_leds(0);
+			//secuencia_leds(0);
 			buffer = 0;
 		}
-		//Iniciar la secuencia de ADC
-		
+		_delay_ms(10);
+
 	}
 }
+
 
 //************************************************************************************
 // NON-INterrupt subroutines
-void trigger_ultrasonic(void) {
-	PORTD |= (1 << PORTD4);
-	_delay_us(10);
-	PORTD &= ~(1 << PORTD4);
+void setup(){
+	//***************************************************************************************
+	//COnfiguración de leds para estrella de la muerte
+	//Configurar como salida
+	DDRD |= (1<<DDD2) | (1<<DDD3) | (1<<DDD4) | (1<<DDD5) | (1<<DDD6) | (1<<DDD7);
+	DDRC |= (1<<DDC1) | (1<<DDC2) | (1 << DDC0);
+
+	//Apagar todos inicialmente
+	PORTD &= ~((1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7));
+	PORTC &= ~((1<<PORTC1) | (1<<PORTC2) | (1<<PORTC0));
+	//****************************************************************************************	
+	//Configuración para poder iniciar los pines trigger y echo del sensor
+	init_ultrasonic_icp();
+	initPWM2();
+	//****************************************************************************************
+	DDRB |= (1 << DDB5);
+	PORTB &= ~(1 << PORTB5); //Led para encender y apgar indicando una comunicación exitosa
+	//****************************************************************************************
+
+	//inicializar esclavo
+	I2C_Slave_Init(SlaveAddress); //Se define la dirección del esclavo
+	
+	TIMSK2 |= (1 << TOIE2); //Activo interrupción por overflow del TIMER 2
+	sei(); //Habilitar interrupciones
 }
 
-uint8_t measure_echo(uint16_t *ticks_out) {
-	uint32_t timeout;
 
-	// 1?? Asegurar ECHO en bajo
-	timeout = 300000UL;
-	while (PIND & (1 << PORTD5)) {
-		if (--timeout == 0) return 0;
-	}
+void secuencia_leds(uint8_t activar)
+{
+	static uint16_t inicio = 0;
+	static uint8_t estado = 0;
 
-	// 2?? Esperar flanco de subida
-	timeout = 300000UL;
-	while (!(PIND & (1 << PORTD5))) {
-		if (--timeout == 0) return 0;
-	}
+	if(activar)
+	{
+		if(estado == 0)
+		{
+			inicio = contador;
+			estado = 1;
+		}
 
-	TCNT1 = 0;
-	TCCR1B = (1 << CS11);
+		else if(estado == 1 && contador - inicio >= 500)
+		{
+			PORTD |= (1 << PORTD2);
+			estado = 2;
+		}
 
-	// 3?? Esperar flanco de bajada
-	timeout = 300000UL;
-	while (PIND & (1 << PORTD5)) {
-		if (--timeout == 0) {
-			TCCR1B = 0;
-			return 0;
+		else if(estado == 2 && contador - inicio >= 1000)
+		{
+			PORTD |= (1 << PORTD3);
+			estado = 3;
+		}
+
+		else if(estado == 3 && contador - inicio >= 1500)
+		{
+			PORTD |= (1 << PORTD4);
+			estado = 4;
+		}
+		else if(estado == 4 && contador - inicio >= 2000)
+		{
+			PORTD |= (1 << PORTD5);
+			estado = 5;
+		}
+		else if(estado == 5 && contador - inicio >= 2200)
+		{
+			PORTD |= (1 << PORTD6);
+			estado = 6;
+		}
+		else if(estado == 6 && contador - inicio >= 2300)
+		{
+			PORTD |= (1 << PORTD7);
+			estado = 7;
+		}
+		else if(estado == 7 && contador - inicio >= 2400)
+		{
+			PORTC |= (1 << PORTC1);
+			estado = 8;
+		}
+		else if(estado == 8 && contador - inicio >= 2500)
+		{
+			PORTC |= (1 << PORTB2);
+			estado = 9;
+		}
+		else if(estado == 9 && contador - inicio >= 2550)
+		{
+			PORTC |= (1 << PORTC0);
 		}
 	}
 
-	TCCR1B = 0;
-	*ticks_out = TCNT1;
-	return 1;
+	else if (activar == 0)
+	{
+		PORTD &= ~((1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7));
+		PORTC &= ~((1 << PORTC1) | (1 << PORTC2) | (1 << PORTC0));
+		
+		estado = 0;
+	}
+}
+/*
+void init_ultrasonic_icp(void)
+{
+	DDRC |= (1 << PORTC2);     // TRIG como salida
+	DDRB &= ~(1 << DDB0);      // ICP1 (PB0 / D8) como entrada
+
+	TCCR1A = 0;
+
+	// Prescaler = 8
+	TCCR1B = (1 << CS11);
+
+	// Captura en flanco de subida inicialmente
+	TCCR1B |= (1 << ICES1);
+
+	// Habilitar interrupciones
+	TIMSK1 |= (1 << ICIE1);
+
+	TCNT1 = 0;
+}
+*/
+
+void init_ultrasonic_icp(void)
+{
+	DDRC |= (1 << PORTC3);
+	DDRB &= ~(1 << DDB0);
+
+	TCCR1A = 0;
+	TCCR1B = (1 << CS11) | (1 << ICES1);
+
+	TIFR1 |= (1 << ICF1);      // <-- LIMPIAR FLAG
+
+	TIMSK1 |= (1 << ICIE1);
+
+	TCNT1 = 0;
 }
 
-void inicializar_pulso(void)
+void trigger_ultrasonic(void)
 {
-	DDRD |= (1 << PORTD4);    // TRIG como salida
-	DDRD &= ~(1 << PORTD5);   // ECHO como entrada
-	TCCR1A = 0;
-	TCCR1B = 0;
-	TCNT1  = 0;
+	PORTC |= (1 << PORTC3);
+	_delay_us(10);
+	PORTC &= ~(1 << PORTC3);
 }
+
 
 //************************************************************************************
 // Interrupt subroutines
+ISR(TIMER1_CAPT_vect)
+{
+	if(captura_estado == 0)
+	{
+		tiempo_inicio = ICR1;
+		TCCR1B &= ~(1 << ICES1);
+		captura_estado = 1;
+	}
+	else
+	{
+		tiempo_fin = ICR1;
+		uint16_t ticks = tiempo_fin - tiempo_inicio;
+		last_distance = ticks / 116;   // SIN FLOAT
+		TCCR1B |= (1 << ICES1);
+		captura_estado = 0;
+	}
+}
+
+ISR(TIMER2_OVF_vect)
+{
+	contador++;
+}
+
+
 
 ISR(TWI_vect){ //(garbación clase 01:06:00)
 	uint8_t estado = TWSR & 0xFC; //Nos quedamos unicamente con los bits de estado TWI Status
@@ -168,181 +291,3 @@ ISR(TWI_vect){ //(garbación clase 01:06:00)
 	}
 	
 }
-
-*/
-		
-			/*
- * Slave_sensor_ultrasonico.c
- * 
- * Created:
- * Author:
- */
-//************************************************************************************
-//================================== ESCLAVO 1 =====================================
-//Este eslavo tiene la función de realizar la lectura para el sensor ultrasonico
-//*************************************************************************************
-//Recordar que siempre hay que poner una resistencia pull-up 
-// Para ver conexión (ver grabación clase 1:15:16)
-// Para calcular valor (ver modulos de clase)
-
-// Encabezado (librerías)
-#include <avr/io.h>
-#include <stdint.h>
-#include <util/delay.h>
-#include <avr/interrupt.h>
-#include "I2C_conf/I2C_conf.h"
-#include "CONF_PWM/CONF_PWM.h"
-
-//Se define la dirección del esclavo, en este caso como es mi programa yo decido que dirección tiene
-// caso contrario cuando se trabaja con un sensor, se debe de colocar la dirección descrita por el datasheet del sensor
-#define SlaveAddress 0x30
-
-uint8_t buffer = 0;
-uint16_t last_distance = 0;
-uint16_t ticks;
-//************************************************************************************
-// Function prototypes
-void trigger_ultrasonic(void);
-uint8_t measure_echo(uint16_t *ticks_out);
-void inicializar_pulso(void);
-//************************************************************************************
-// Main Function
-int main(void)
-{
-	//Configuración para poder iniciar los pines trigger y echo del sensor
-	inicializar_pulso();
-	PORTD &= ~(1 << PORTD4);
-	PORTD &= ~(1 << PORTD5);
-	//********************************
-	
-	DDRB |= (1 << DDB5);
-	PORTB &= ~(1 << PORTB5); //Led para encender y apgar indicando una comunicación exitosa
-
-	//inicializar ADC
-	I2C_Slave_Init(SlaveAddress); //Se define la dirección del esclavo
-	
-	sei(); //Habilitar interrupciones
-	
-	while (1)
-	{
-		trigger_ultrasonic();
-		if (measure_echo(&ticks)) {
-			// Solo si hay nueva medición
-			float distancia_cm = (ticks * 0.5) / 58.0;
-			last_distance = (uint16_t)distancia_cm;
-		}
-		
-		if(buffer == 'R'){ //Reviso si el caractér de lectura esta recibiendose
-			PINB |= (1 << PINB5); //Se hace un toggle para indicar que si hay datos 
-			buffer = 0;
-		}
-		//Iniciar la secuencia de ADC
-		
-	}
-}
-
-//************************************************************************************
-// NON-INterrupt subroutines
-void trigger_ultrasonic(void) {
-	PORTD |= (1 << PORTD4);
-	_delay_us(10);
-	PORTD &= ~(1 << PORTD4);
-}
-
-uint8_t measure_echo(uint16_t *ticks_out) {
-	uint32_t timeout;
-
-	// 1?? Asegurar ECHO en bajo
-	timeout = 300000UL;
-	while (PIND & (1 << PORTD5)) {
-		if (--timeout == 0) return 0;
-	}
-
-	// 2?? Esperar flanco de subida
-	timeout = 300000UL;
-	while (!(PIND & (1 << PORTD5))) {
-		if (--timeout == 0) return 0;
-	}
-
-	TCNT1 = 0;
-	TCCR1B = (1 << CS11);
-
-	// 3?? Esperar flanco de bajada
-	timeout = 300000UL;
-	while (PIND & (1 << PORTD5)) {
-		if (--timeout == 0) {
-			TCCR1B = 0;
-			return 0;
-		}
-	}
-
-	TCCR1B = 0;
-	*ticks_out = TCNT1;
-	return 1;
-}
-
-void inicializar_pulso(void)
-{
-	DDRD |= (1 << PORTD4);    // TRIG como salida
-	DDRD &= ~(1 << PORTD5);   // ECHO como entrada
-	TCCR1A = 0;
-	TCCR1B = 0;
-	TCNT1  = 0;
-}
-
-//************************************************************************************
-// Interrupt subroutines
-
-ISR(TWI_vect){ //(garbación clase 01:06:00)
-	uint8_t estado = TWSR & 0xFC; //Nos quedamos unicamente con los bits de estado TWI Status
-	switch(estado){
-		//**************************
-		// Slave debe recibir dato
-		//**************************
-		case 0x60: //SLA+W recibido
-		case 0x70: //General call
-			TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWIE) | (1 << TWEA); //Indica "si te escuche"
-			break;
-		
-		volatile uint8_t comando_recibido = 0;
-
-		case 0x80:
-		comando_recibido = TWDR;
-		TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWIE) | (1 << TWEA);
-		break;
-
-		case 0xA8:
-		case 0xB8:
-
-		if(comando_recibido == 'R'){
-			TWDR = last_distance;
-			}else{
-			TWDR = 0x00;
-		}
-
-		TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWIE) | (1 << TWEA);
-		break;
-
-		//IMPORTANTE: que pasa si quiero enviar más de un dato?
-		//Se puede hacer un arreglo por cada vez que envío un dato (ver grabación clase 1:07:30)
-		
-		case 0xC0: // NACK recibido
-		case 0xC8:
-		TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWIE) | (1 << TWEA);
-		break;
-
-			
-		case 0xA0: // STOP o repeated START recibido como slave
-			TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWIE) | (1 << TWEA);
-			break;
-		//**********************
-		// Cualquier error
-		//**********************
-		default:
-			TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWIE) | (1 << TWEA);
-			break;
-		
-	}
-	
-}
-

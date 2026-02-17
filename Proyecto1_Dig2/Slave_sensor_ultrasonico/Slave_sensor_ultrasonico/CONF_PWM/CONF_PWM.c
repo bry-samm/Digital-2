@@ -10,8 +10,9 @@ void initPWM1(){
 	DDRB |= (1 << DDB1); // PB1 as output (OC1A)
 	DDRB |= (1 << DDB2); // PB2 as output (OC1B)
 	TCCR1A = 0;
-	TCCR1A |= (1 << COM1A1); // Set as non inverted OC1A
-	TCCR1A |= (1 << COM1B1); // Set as non inverted OC1B
+	//Descomentar las líneas para usar OCR
+	//TCCR1A |= (1 << COM1A1); // Set as non inverted OC1A
+	//TCCR1A |= (1 << COM1B1); // Set as non inverted OC1B
 	TCCR1A |= (1 << WGM10); // Set mode 5 => Fast PWM and top = 0xFF
 	
 	TCCR1B = 0;
@@ -29,4 +30,21 @@ void initPWM0(){
 	
 	TCCR0B = 0;
 	TCCR0B |= (1 << CS01) | (1 << CS00); // Prescaler 64
+}
+
+void initPWM2(void)
+{
+	// Configurar pines como salida
+	DDRB |= (1 << DDB3);  // PB3 ? OC2A ? D11
+	DDRD |= (1 << DDD3);  // PD3 ? OC2B ? D3
+	// Limpiar registros
+	TCCR2A = 0;
+	TCCR2B = 0;
+	// Modo Fast PWM (WGM22:0 = 3)
+	TCCR2A |= (1 << WGM20) | (1 << WGM21);
+	// Salida no invertida
+	TCCR2A |= (1 << COM2A1);  // OC2A
+	//TCCR2A |= (1 << COM2B1);  // OC2B         Descomentar este comando para poder usar OCR2B
+	// Prescaler = 64
+	TCCR2B |= (1 << CS22);
 }

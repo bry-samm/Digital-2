@@ -30,6 +30,6 @@
 
 void initPWM0();
 void initPWM1();
-
+void initPWM2(void);
 
 #endif /* CONF_PWM_H_ */

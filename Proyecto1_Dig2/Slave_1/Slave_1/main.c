@@ -22,7 +22,7 @@
 
 //Se define la dirección del esclavo, en este caso como es mi programa yo decido que dirección tiene
 // caso contrario cuando se trabaja con un sensor, se debe de colocar la dirección descrita por el datasheet del sensor
-#define SlaveAddress 0x30
+#define SlaveAddress 0x40
 
 uint8_t buffer = 0;
 uint8_t valor_ADC = 0;

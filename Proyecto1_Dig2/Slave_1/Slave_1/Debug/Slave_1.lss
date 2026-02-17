@@ -177,7 +177,7 @@ int main(void)
 	
 	//inicializar ADC
 	I2C_Slave_Init(SlaveAddress); //Se define la dirección del esclavo
-  ec:	80 e3       	ldi	r24, 0x30	; 48
+  ec:	80 e4       	ldi	r24, 0x40	; 64
   ee:	0e 94 64 00 	call	0xc8	; 0xc8 <I2C_Slave_Init>
 	
 	sei(); //Habilitar interrupciones
