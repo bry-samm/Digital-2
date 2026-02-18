@@ -56,19 +56,25 @@ int main(void)
 		//trigger_ultrasonic();
 		//_delay_ms(60);   // tiempo entre disparos
 
+		// Control motor
 		if (buffer == 'N'){
-			PORTC |= (1 << PORTC1);
 			OCR2A = 130;
-			secuencia_leds(1);
-			//secuencia_leds(1);
-			buffer = 0;
-		}else if (buffer == 'F'){
-			PORTC &= ~(1 << PORTC1);
-			OCR2A = 0;
-			secuencia_leds(0);
-			//secuencia_leds(0);
-			buffer = 0;
 		}
+
+		if (buffer == 'F'){
+			OCR2A = 0;
+		}
+
+		// Control secuencia
+		if (buffer == 'D'){
+			secuencia_leds(1);
+			}
+		if (buffer == 'X'){
+			secuencia_leds(0);
+		}
+
+		buffer = 0;
+
 		_delay_ms(10);
 
 	}
@@ -156,8 +162,8 @@ void secuencia_leds(uint8_t activar)
 		}
 		else if(estado == 8 && contador - inicio >= 2500)
 		{
-			PORTC |= (1 << PORTB2);
-			estado = 9;
+			PORTC |= (1 << PORTC2);
+			estado = 9;   
 		}
 		else if(estado == 9 && contador - inicio >= 2550)
 		{

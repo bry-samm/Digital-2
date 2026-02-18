@@ -29,7 +29,7 @@
 #define slave2W (0x40 << 1) & 0b11111110 //Pongo el último bit en 0 para escribir
 
 uint8_t bufferI2C = 0;
-
+uint8_t color = 0;
 // ================== MELMAN =============================
 
 // --- DIRECCIONES I2C ---
@@ -85,11 +85,18 @@ int main(void)
 		convertir_3_digitos(bufferI2C, &s1_c, &s1_d, &s1_u);
 		
 		LCD_Set_Cursor(1,1);
-		LCD_Write_String("Dis:");
+		LCD_Write_String("Dis");
 		
-		LCD_Set_Cursor(6,1);
-		LCD_Write_String("Ang:");
-  
+		LCD_Set_Cursor(5,1);
+		LCD_Write_String("Ang");
+		
+		LCD_Set_Cursor(9,1);
+		LCD_Write_String("Gir");
+		
+		LCD_Set_Cursor(13,1);
+		LCD_Write_String("Col");
+		
+
 		LCD_Set_Cursor(1,2);
 		LCD_Write_Char(s1_c);
 		LCD_Write_Char(s1_d);
@@ -160,10 +167,28 @@ void enviar_comando()
 	{
 		if(I2C_Master_Write(slave2W))
 		{
-			if(bufferI2C <= 20)
-			I2C_Master_Write('N');
-			else
-			I2C_Master_Write('F');
+			// Primero enviar N o F
+			if(bufferI2C <= 20){
+				I2C_Master_Write('N');
+			}
+			else{
+				I2C_Master_Write('F');
+			}
+
+			// Luego evaluar color SIEMPRE
+			if(color == 1){
+				LCD_Set_Cursor(13,2);
+				LCD_Write_String("R");
+				I2C_Master_Write('X');
+			}else if (color == 2){
+				LCD_Set_Cursor(13,2);
+				LCD_Write_String("V");
+				I2C_Master_Write('D');
+			}else if (color == 3){
+			LCD_Set_Cursor(13,2);
+			LCD_Write_String("A");
+		}
+
 		}
 		I2C_Master_Stop();
 	}
@@ -174,15 +199,25 @@ void enviar_comando()
 	}
 }
 
+
 void comunicar_distancia()
 {
+	// ===== Leer distancia del ultrasonico (0x40) =====
 	I2C_Master_Start();
 	I2C_Master_Write(slave2W);
 	I2C_Master_RepeatedStart();
 	I2C_Master_Write(slave2R);
-	
 	I2C_Master_Read(&bufferI2C, 0);
-	I2C_Master_Stop(); //Finalizamos
+	I2C_Master_Stop();
+
+	// ===== Leer color del esclavo 0x30 =====
+	I2C_Master_Start();
+	I2C_Master_Write(slave1W);
+	I2C_Master_RepeatedStart();
+	I2C_Master_Write(slave1R);
+	I2C_Master_Read(&color, 0);
+	I2C_Master_Stop();
+
 	enviar_comando();
 }
 
@@ -217,20 +252,30 @@ void angulo_giro(void)
     cadena_texto("ANGULO -> X: "); 
 	Enviar_Numero((int16_t)ang_x);
 	if (ang_x <= -30){
-		LCD_Set_Cursor(6,2);
+		LCD_Set_Cursor(5,2);
 		LCD_Write_String("->");
 	}else if (ang_x >= 30){
-		LCD_Set_Cursor(6,2);
+		LCD_Set_Cursor(5,2);
 		LCD_Write_String("<-");
 	}else{
-		LCD_Set_Cursor(6,2);
-		LCD_Write_String("-");
+		LCD_Set_Cursor(5,2);
+		LCD_Write_String("--");
+	}
+	if (ang_y <= -45){
+		LCD_Set_Cursor(9,2);
+		LCD_Write_String("Izq");
+		}else if (ang_y >= 45){
+		LCD_Set_Cursor(9,2);
+		LCD_Write_String("Der");
+		}else{
+		LCD_Set_Cursor(9,2);
+		LCD_Write_String("---");
 	}
 	
     cadena_texto(" deg | Y: "); 
 	Enviar_Numero((int16_t)ang_y);
     cadena_texto(" deg\r\n");
-	//Enviar_angulos((int16_t) ang_x, (int16_t) ang_y); 	
+	Enviar_angulos((int16_t) ang_x, (int16_t) ang_y); 	
 }
 
 void Enviar_angulos(int16_t anguloX, int16_t anguloY)

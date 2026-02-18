@@ -101,8 +101,8 @@ int main(void)
 			control_servo((int16_t) anguloX);
 			//motor_steper((int16_t) anguloY);
 			// Actualizar modo del Stepper
-			if (anguloY > 30) modo_stepper = 1;
-			else if (anguloY < -30) modo_stepper = 2;
+			if (anguloY > 45) modo_stepper = 1;
+			else if (anguloY < -45) modo_stepper = 2;
 			else modo_stepper = 0;
 			
 		}		
@@ -237,7 +237,7 @@ ISR(TIMER0_COMPA_vect)
 		pulsos_conteo = 0; // Reiniciar contador para el siguiente color
 	}
 }
-
+/*
 ISR(TWI_vect)
 {
 	uint8_t estado = TWSR & 0xF8; // Máscara para el estado
@@ -265,4 +265,48 @@ ISR(TWI_vect)
 		TWCR = (1 << TWINT) | (1 << TWEA) | (1 << TWEN) | (1 << TWIE);
 		break;
 		}
+}
+*/
+ISR(TWI_vect)
+{
+	uint8_t estado = TWSR & 0xF8;
+
+	switch (estado)
+	{
+		//================ MASTER WRITE =================
+		case 0x60: // SLA+W
+		indice = 0;
+		TWCR = (1<<TWINT)|(1<<TWEA)|(1<<TWEN)|(1<<TWIE);
+		break;
+
+		case 0x80: // Byte recibido
+		if(indice < 4)
+		{
+			dato_r[indice] = TWDR;
+			indice++;
+		}
+		TWCR = (1<<TWINT)|(1<<TWEA)|(1<<TWEN)|(1<<TWIE);
+		break;
+
+		case 0xA0: // STOP recibido
+		bandera = 1;
+		TWCR = (1<<TWINT)|(1<<TWEA)|(1<<TWEN)|(1<<TWIE);
+		break;
+
+		//================ MASTER READ =================
+		case 0xA8: // SLA+R recibido
+		case 0xB8: // Dato transmitido, ACK recibido
+		TWDR = colorDetectado;   // ? AQUÍ ENVÍAS EL COLOR
+		TWCR = (1<<TWINT)|(1<<TWEA)|(1<<TWEN)|(1<<TWIE);
+		break;
+
+		case 0xC0: // NACK recibido
+		case 0xC8:
+		TWCR = (1<<TWINT)|(1<<TWEA)|(1<<TWEN)|(1<<TWIE);
+		break;
+
+		default:
+		TWCR = (1<<TWINT)|(1<<TWEA)|(1<<TWEN)|(1<<TWIE);
+		break;
+	}
 }
