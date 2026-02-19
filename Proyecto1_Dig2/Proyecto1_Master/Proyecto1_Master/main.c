@@ -30,6 +30,22 @@
 
 uint8_t bufferI2C = 0;
 uint8_t color = 0;
+
+volatile int16_t angulo_x;
+volatile int16_t angulo_y;
+volatile uint8_t autorizado = 0;
+volatile uint8_t movimiento_motor = 0;
+
+
+volatile uint16_t angulox_IO = 0;
+volatile uint16_t anguloy_IO = 0;
+volatile uint16_t distancia_IO = 0;
+volatile uint8_t disparo_IO = 0;
+volatile uint8_t autorizacion_IO = 0;
+
+volatile uint8_t datos_listos = 0;
+
+
 // ================== MELMAN =============================
 
 // --- DIRECCIONES I2C ---
@@ -62,6 +78,7 @@ void cadena_texto(char* texto);
 void enviar_comando();
 void comunicar_distancia();
 
+void imprimirNumero(uint16_t num);
 //====================== MELMAN ==================================
 // --- PROTOTIPOS ---
 void MPU6050_Init(void);
@@ -69,6 +86,7 @@ void angulo_giro(void);
 void Enviar_Numero(int16_t numero);
 void Enviar_angulos(int16_t anguloX, int16_t anguloY);
 
+void enviar_paquete_ESP32(void);
 //************************************************************************************
 // Main Function
 int main(void)
@@ -79,8 +97,11 @@ int main(void)
 	
 	while (1)
 	{
+		
 		angulo_giro();
 		comunicar_distancia();
+		
+		enviar_paquete_ESP32();
 		
 		convertir_3_digitos(bufferI2C, &s1_c, &s1_d, &s1_u);
 		
@@ -104,7 +125,7 @@ int main(void)
 		writeChar(s1_c);
 		writeChar(s1_d);
 		writeChar(s1_u);
-		
+
 		PORTB ^= (1 << PORTB5);
 		
 	}
@@ -125,6 +146,7 @@ void setup()
 		
 	sei();
 }
+
 
 //Función para poder enviar caracteres
 void writeChar(char caracter){
@@ -170,25 +192,30 @@ void enviar_comando()
 			// Primero enviar N o F
 			if(bufferI2C <= 20){
 				I2C_Master_Write('N');
+				movimiento_motor = 1;
 			}
 			else{
 				I2C_Master_Write('F');
+				movimiento_motor = 0;
 			}
 
-			// Luego evaluar color SIEMPRE
+			//evaluar color 
 			if(color == 1){
 				LCD_Set_Cursor(13,2);
 				LCD_Write_String("R");
 				I2C_Master_Write('X');
-			}else if (color == 2){
+				autorizado = 0;
+			}else if (color == 2 || disparo_IO == 1){
 				LCD_Set_Cursor(13,2);
 				LCD_Write_String("V");
 				I2C_Master_Write('D');
+				autorizado = 1;
 			}else if (color == 3){
-			LCD_Set_Cursor(13,2);
-			LCD_Write_String("A");
+				LCD_Set_Cursor(13,2);
+				LCD_Write_String("A");
+				autorizado = 0;
 		}
-
+		
 		}
 		I2C_Master_Stop();
 	}
@@ -272,6 +299,9 @@ void angulo_giro(void)
 		LCD_Write_String("---");
 	}
 	
+	angulo_x = ang_x;
+	angulo_y = ang_y;
+	
     cadena_texto(" deg | Y: "); 
 	Enviar_Numero((int16_t)ang_y);
     cadena_texto(" deg\r\n");
@@ -319,5 +349,119 @@ void Enviar_Numero(int16_t numero) {
     while (numero > 0) { temp[i++] = (numero % 10) + '0'; numero /= 10; }
     while (i > 0) { writeChar(temp[--i]); }
 }
+
+void enviar_paquete_ESP32(void)
+{
+	cadena_texto("<");
+
+	Enviar_Numero(angulo_x);
+	cadena_texto(",");
+
+	Enviar_Numero(angulo_y);
+	cadena_texto(",");
+
+	Enviar_Numero(bufferI2C);
+	cadena_texto(",");
+
+	Enviar_Numero(autorizado);
+	cadena_texto(",");
+	
+	Enviar_Numero(movimiento_motor);
+	cadena_texto(",");
+
+	cadena_texto(">\n");
+}
+
 //************************************************************************************
 // Interrupt subroutines
+
+#define BUFFER_SIZE 40
+
+volatile char buffer[BUFFER_SIZE];
+volatile uint8_t index = 0;
+
+ISR(USART_RX_vect) {
+
+	char recibido = UDR0;
+
+	if (recibido == '\n' || recibido == '\r') {
+
+		buffer[index] = '\0';
+
+		uint16_t valores[5] = {0};
+		uint8_t val_idx = 0;
+		uint16_t temp = 0;
+
+		for (uint8_t i = 0; i <= index; i++) {
+
+			char c = buffer[i];
+
+			if (c >= '0' && c <= '9') {
+				temp = temp * 10 + (c - '0');
+			}
+			else if (c == ',' || c == '\0') {
+
+				if (val_idx < 5) {
+					valores[val_idx++] = temp;
+					temp = 0;
+				}
+			}
+		}
+
+		// ===== GUARDAR CADA VALOR EN SU VARIABLE =====
+
+		if (val_idx >= 5) {
+
+			angulox_IO     = valores[0];
+			anguloy_IO     = valores[1];
+			distancia_IO   = valores[2];
+			disparo_IO     = valores[3];
+			autorizacion_IO = valores[4];
+
+			datos_listos = 1;
+		}
+
+		index = 0;
+	}
+	else {
+
+		if (index < BUFFER_SIZE - 1) {
+			buffer[index++] = recibido;
+		}
+		else {
+			index = 0;  // Protección overflow
+		}
+	}
+}
+
+
+/*
+#define BUFFER_SIZE 20
+
+volatile char buffer[BUFFER_SIZE];
+volatile uint8_t index = 0;
+volatile uint8_t paquete_listo = 0;
+
+ISR(USART_RX_vect)
+{
+	char c = UDR0;
+
+	if (c == '\n')  // fin de paquete
+	{
+		buffer[index] = '\0';
+		paquete_listo = 1;
+		index = 0;
+	}
+	else
+	{
+		if (index < BUFFER_SIZE - 1)
+		{
+			buffer[index++] = c;
+		}
+		else
+		{
+			index = 0;  // protección overflow
+		}
+	}
+}
+*/

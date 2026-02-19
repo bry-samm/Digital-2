@@ -237,36 +237,7 @@ ISR(TIMER0_COMPA_vect)
 		pulsos_conteo = 0; // Reiniciar contador para el siguiente color
 	}
 }
-/*
-ISR(TWI_vect)
-{
-	uint8_t estado = TWSR & 0xF8; // Máscara para el estado
 
-	switch (estado) {
-		case 0x60: // Master quiere escribirnos (SLA+W)
-		indice = 0; // Reiniciamos el contador de bytes
-		TWCR = (1 << TWINT) | (1 << TWEA) | (1 << TWEN) | (1 << TWIE);
-		break;
-
-		case 0x80: // Dato recibido
-		if (indice < 4) {
-			dato_r[indice] = TWDR; // Guardamos el byte actual
-			indice++;
-		}
-		TWCR = (1 << TWINT) | (1 << TWEA) | (1 << TWEN) | (1 << TWIE);
-		break;
-
-		case 0xA0: // Se recibió un STOP o Repeated START
-		bandera = 1; // Avisamos al main que ya terminó la trama
-		TWCR = (1 << TWINT) | (1 << TWEA) | (1 << TWEN) | (1 << TWIE);
-		break;
-
-		default:
-		TWCR = (1 << TWINT) | (1 << TWEA) | (1 << TWEN) | (1 << TWIE);
-		break;
-		}
-}
-*/
 ISR(TWI_vect)
 {
 	uint8_t estado = TWSR & 0xF8;
