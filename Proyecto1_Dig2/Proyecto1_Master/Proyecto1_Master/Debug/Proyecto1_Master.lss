@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 00000148  00000000  00000000  00001410  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00001cf9  00000000  00000000  00001558  2**0
+  6 .debug_info   00001cf4  00000000  00000000  00001558  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000aed  00000000  00000000  00003251  2**0
+  7 .debug_abbrev 00000b0b  00000000  00000000  0000324c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000f43  00000000  00000000  00003d3e  2**0
+  8 .debug_line   00000f43  00000000  00000000  00003d57  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000368  00000000  00000000  00004c84  2**2
+  9 .debug_frame  00000368  00000000  00000000  00004c9c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000070e  00000000  00000000  00004fec  2**0
+ 10 .debug_str    0000070e  00000000  00000000  00005004  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000cac  00000000  00000000  000056fa  2**0
+ 11 .debug_loc    00000cac  00000000  00000000  00005712  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000120  00000000  00000000  000063a6  2**0
+ 12 .debug_ranges 00000120  00000000  00000000  000063be  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -1040,23 +1040,18 @@ void Enviar_angulos(int16_t anguloX, int16_t anguloY)
      638:	0e 94 ec 00 	call	0x1d8	; 0x1d8 <I2C_Master_Write>
      63c:	88 23       	and	r24, r24
      63e:	79 f0       	breq	.+30     	; 0x65e <Enviar_angulos+0x3c>
-		 /*
-		 I2C_Master_Write(anguloX); // Byte 1: Angulo X
-		 I2C_Master_Write(anguloY); // Byte 2: Angulo Y
-		 I2C_Master_Stop();
-		 */
-		 I2C_Master_Write((uint8_t)(anguloX >> 8)); // byte alto
+	 { 
+		 I2C_Master_Write((uint8_t)(anguloX >> 8)); //  Se envia el byte alto del angulos x
      640:	80 2f       	mov	r24, r16
      642:	0e 94 ec 00 	call	0x1d8	; 0x1d8 <I2C_Master_Write>
-		 I2C_Master_Write((uint8_t)(anguloX & 0xFF)); // byte bajo
+		 I2C_Master_Write((uint8_t)(anguloX & 0xFF)); // Se envia el byte bajo del angulo x 
      646:	81 2f       	mov	r24, r17
      648:	0e 94 ec 00 	call	0x1d8	; 0x1d8 <I2C_Master_Write>
-
-		 // Ángulo Y
-		 I2C_Master_Write((uint8_t)(anguloY >> 8));
+		 
+		 I2C_Master_Write((uint8_t)(anguloY >> 8));  // Se envia el byte alto del angulo y 
      64c:	8d 2f       	mov	r24, r29
      64e:	0e 94 ec 00 	call	0x1d8	; 0x1d8 <I2C_Master_Write>
-		 I2C_Master_Write((uint8_t)(anguloY & 0xFF));
+		 I2C_Master_Write((uint8_t)(anguloY & 0xFF));  // Se envia el byte bajo del angulo y
      652:	8c 2f       	mov	r24, r28
      654:	0e 94 ec 00 	call	0x1d8	; 0x1d8 <I2C_Master_Write>
 
@@ -1066,7 +1061,7 @@ void Enviar_angulos(int16_t anguloX, int16_t anguloY)
 	 }
 	 else
 	 {
-		 // Si el esclavo no responde, liberar el bus para no colgar el programa
+		 // Si el esclavo no responde, se indica en el serial. 
 		 I2C_Master_Stop();
      65e:	0e 94 e4 00 	call	0x1c8	; 0x1c8 <I2C_Master_Stop>
 		 cadena_texto("Error: Esclavo no responde\r\n");
@@ -1115,11 +1110,11 @@ void MPU6050_Init(void) {
 // NON-INterrupt subroutines
 void setup()
 {
-	initLCD8bits();
+	initLCD8bits(); // Se inicializa el LCD
      69c:	0e 94 a3 01 	call	0x346	; 0x346 <initLCD8bits>
-	initUART();
+	initUART(); // Se inicializa la configuración del Serial 
      6a0:	0e 94 22 01 	call	0x244	; 0x244 <initUART>
-	MPU6050_Init();
+	MPU6050_Init(); // Se inicializa la comunicación del MPU
      6a4:	0e 94 3a 03 	call	0x674	; 0x674 <MPU6050_Init>
 	//Puerto de salida para leds (en este caso sería el LCD)
 	
@@ -1145,11 +1140,11 @@ void setup()
      6c4:	08 95       	ret
 
 000006c6 <Enviar_Numero>:
-    I2C_Master_Start(); I2C_Master_Write(MPU_W); 
     I2C_Master_Write(PWR_MGMT_1); I2C_Master_Write(0x00);
     I2C_Master_Stop(); _delay_ms(10);
 }
 
+// Esta función sirve para enviar datos los datos al serial. 
 void Enviar_Numero(int16_t numero) {
      6c6:	ef 92       	push	r14
      6c8:	ff 92       	push	r15
@@ -1180,11 +1175,11 @@ void Enviar_Numero(int16_t numero) {
      6f8:	f1 94       	neg	r15
      6fa:	e1 94       	neg	r14
      6fc:	f1 08       	sbc	r15, r1
-    I2C_Master_Start(); I2C_Master_Write(MPU_W); 
     I2C_Master_Write(PWR_MGMT_1); I2C_Master_Write(0x00);
     I2C_Master_Stop(); _delay_ms(10);
 }
 
+// Esta función sirve para enviar datos los datos al serial. 
 void Enviar_Numero(int16_t numero) {
      6fe:	10 e0       	ldi	r17, 0x00	; 0
      700:	10 c0       	rjmp	.+32     	; 0x722 <Enviar_Numero+0x5c>
@@ -1267,7 +1262,7 @@ void angulo_giro(void)
     int16_t Ax, Ay, Az;
     double ang_x, ang_y;
 
-    // --- Lectura I2C ---
+    // Se hace la lectura del I2C del MPU6050
     I2C_Master_Start();
      780:	0e 94 c6 00 	call	0x18c	; 0x18c <I2C_Master_Start>
 	I2C_Master_Write(MPU_W); 
@@ -1282,6 +1277,7 @@ void angulo_giro(void)
      794:	81 ed       	ldi	r24, 0xD1	; 209
      796:	0e 94 ec 00 	call	0x1d8	; 0x1d8 <I2C_Master_Write>
     
+	//Se leen los valores que este modulo proporciona
     I2C_Master_Read(&high, 1); 
      79a:	61 e0       	ldi	r22, 0x01	; 1
      79c:	ce 01       	movw	r24, r28
@@ -1334,7 +1330,7 @@ void angulo_giro(void)
     I2C_Master_Stop();
      7fc:	0e 94 e4 00 	call	0x1c8	; 0x1c8 <I2C_Master_Stop>
 
-    // --- Matemáticas para hacer el calculo del angulo en los ejes
+    //Matemáticas para hacer el calculo del angulo en los ejes
 	ang_x = atan2(Ay, Az) * 57.296;
      800:	b6 01       	movw	r22, r12
      802:	dd 0c       	add	r13, r13
@@ -1392,6 +1388,8 @@ void angulo_giro(void)
      872:	5c 01       	movw	r10, r24
      874:	cb 01       	movw	r24, r22
      876:	0e 94 63 03 	call	0x6c6	; 0x6c6 <Enviar_Numero>
+	
+	//Logica para mostrar los valores en la LCD, Simplificando escritura con abreviaturas
 	if (ang_x <= -30){
      87a:	20 e0       	ldi	r18, 0x00	; 0
      87c:	30 e0       	ldi	r19, 0x00	; 0
@@ -1501,6 +1499,8 @@ void angulo_giro(void)
      946:	70 93 99 01 	sts	0x0199, r23	; 0x800199 <angulo_y+0x1>
      94a:	60 93 98 01 	sts	0x0198, r22	; 0x800198 <angulo_y>
 	
+	//Esto solo funciona para verificar que los datos se estan recibiendo bien
+	//Para luego ser imprimidas en el serial. 
     cadena_texto(" deg | Y: "); 
      94e:	80 e6       	ldi	r24, 0x60	; 96
      950:	91 e0       	ldi	r25, 0x01	; 1
@@ -1538,9 +1538,9 @@ void angulo_giro(void)
      990:	08 95       	ret
 
 00000992 <enviar_paquete_ESP32>:
-    while (i > 0) { writeChar(temp[--i]); }
 }
 
+//función para enviar datos, se define la estructura que este debe de tener para enviar. 
 void enviar_paquete_ESP32(void)
 {
 	cadena_texto("<");
@@ -1619,15 +1619,13 @@ int main(void)
 	while (1)
 	{
 		
-		angulo_giro();
+		angulo_giro(); //función para obtener los valores de los angulos
      a12:	0e 94 ad 03 	call	0x75a	; 0x75a <angulo_giro>
-		comunicar_distancia();
+		comunicar_distancia(); // función para mostrar y recibir el valor de la distancia
      a16:	0e 94 ec 02 	call	0x5d8	; 0x5d8 <comunicar_distancia>
-		
-		enviar_paquete_ESP32();
+		enviar_paquete_ESP32(); //función para enviar datos a Adafruit
      a1a:	0e 94 c9 04 	call	0x992	; 0x992 <enviar_paquete_ESP32>
-		
-		convertir_3_digitos(bufferI2C, &s1_c, &s1_d, &s1_u);
+		convertir_3_digitos(bufferI2C, &s1_c, &s1_d, &s1_u); //Convierte los valores a datos que pueda leer y escribir la LCD
      a1e:	80 91 97 01 	lds	r24, 0x0197	; 0x800197 <bufferI2C>
      a22:	9e 01       	movw	r18, r28
      a24:	2d 5f       	subi	r18, 0xFD	; 253
@@ -1640,7 +1638,8 @@ int main(void)
      a32:	7f 4f       	sbci	r23, 0xFF	; 255
      a34:	90 e0       	ldi	r25, 0x00	; 0
      a36:	0e 94 3c 02 	call	0x478	; 0x478 <convertir_3_digitos>
-		
+
+		// Se ejecuta para mostar los valores en el LCD
 		LCD_Set_Cursor(1,1);
      a3a:	61 e0       	ldi	r22, 0x01	; 1
      a3c:	81 e0       	ldi	r24, 0x01	; 1
@@ -1649,7 +1648,6 @@ int main(void)
      a42:	89 e7       	ldi	r24, 0x79	; 121
      a44:	91 e0       	ldi	r25, 0x01	; 1
      a46:	0e 94 05 02 	call	0x40a	; 0x40a <LCD_Write_String>
-		
 		LCD_Set_Cursor(5,1);
      a4a:	61 e0       	ldi	r22, 0x01	; 1
      a4c:	85 e0       	ldi	r24, 0x05	; 5
@@ -1658,7 +1656,6 @@ int main(void)
      a52:	8d e7       	ldi	r24, 0x7D	; 125
      a54:	91 e0       	ldi	r25, 0x01	; 1
      a56:	0e 94 05 02 	call	0x40a	; 0x40a <LCD_Write_String>
-		
 		LCD_Set_Cursor(9,1);
      a5a:	61 e0       	ldi	r22, 0x01	; 1
      a5c:	89 e0       	ldi	r24, 0x09	; 9
@@ -1667,7 +1664,6 @@ int main(void)
      a62:	81 e8       	ldi	r24, 0x81	; 129
      a64:	91 e0       	ldi	r25, 0x01	; 1
      a66:	0e 94 05 02 	call	0x40a	; 0x40a <LCD_Write_String>
-		
 		LCD_Set_Cursor(13,1);
      a6a:	61 e0       	ldi	r22, 0x01	; 1
      a6c:	8d e0       	ldi	r24, 0x0D	; 13
@@ -1676,8 +1672,7 @@ int main(void)
      a72:	85 e8       	ldi	r24, 0x85	; 133
      a74:	91 e0       	ldi	r25, 0x01	; 1
      a76:	0e 94 05 02 	call	0x40a	; 0x40a <LCD_Write_String>
-		
-
+	
 		LCD_Set_Cursor(1,2);
      a7a:	62 e0       	ldi	r22, 0x02	; 2
      a7c:	81 e0       	ldi	r24, 0x01	; 1
@@ -1701,7 +1696,7 @@ int main(void)
      aa0:	8b 81       	ldd	r24, Y+3	; 0x03
      aa2:	0e 94 28 02 	call	0x450	; 0x450 <writeChar>
 
-		PORTB ^= (1 << PORTB5);
+		PORTB ^= (1 << PORTB5); //Indicador de comunicación I2C
      aa6:	95 b1       	in	r25, 0x05	; 5
      aa8:	80 e2       	ldi	r24, 0x20	; 32
      aaa:	89 27       	eor	r24, r25
@@ -1739,6 +1734,7 @@ ISR(USART_RX_vect) {
      ada:	de bf       	out	0x3e, r29	; 62
      adc:	cd bf       	out	0x3d, r28	; 61
 
+//Logica para hacer el envio de datos al ESP32
 	char recibido = UDR0;
      ade:	80 91 c6 00 	lds	r24, 0x00C6	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7f80c6>
 
@@ -1857,7 +1853,7 @@ ISR(USART_RX_vect) {
 			}
 		}
 
-		// ===== GUARDAR CADA VALOR EN SU VARIABLE =====
+		// Se guarda los valores recibidos 
 
 		if (val_idx >= 5) {
      b74:	65 30       	cpi	r22, 0x05	; 5
@@ -1892,9 +1888,9 @@ ISR(USART_RX_vect) {
 
 		index = 0;
      bae:	10 92 8a 01 	sts	0x018A, r1	; 0x80018a <__data_end>
-
 ISR(USART_RX_vect) {
 
+//Logica para hacer el envio de datos al ESP32
 	char recibido = UDR0;
 
 	if (recibido == '\n' || recibido == '\r') {
@@ -1924,7 +1920,6 @@ ISR(USART_RX_vect) {
      bd2:	10 92 8a 01 	sts	0x018A, r1	; 0x80018a <__data_end>
 		}
 	}
-}
      bd6:	2a 96       	adiw	r28, 0x0a	; 10
      bd8:	0f b6       	in	r0, 0x3f	; 63
      bda:	f8 94       	cli

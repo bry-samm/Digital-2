@@ -46,18 +46,11 @@ volatile uint8_t last_state = 0;
 
 //************************************************************************************
 // Function prototypes
-void initPCINT(void); //cambio de estado de un pin 
-//void leerColor(void);
+void initPCINT(void);
 void initTimer0(void);
-//void num(int16_t numero); 
-//void motor_steper(int16_t angulo1); 
 void control_servo(int16_t angulo2);
 void procesarColor(void); 
-
-//Función para poder enviar caracteres
 void writeChar(char caracter);
-
-//Empleamos un puntero para ir mandando cada caracter del string
 void cadena_texto(char* texto);
 
 //************************************************************************************
@@ -75,11 +68,11 @@ int main(void)
 	//Puerto para mostrar comunicación activa
 	DDRB |= (1 << DDB5);
 	
-	Servo2(0, 8); 
-	initTimer0(); 
-	initPCINT(); 
+	Servo2(0, 8); //Configuración para el PWMT1 del motor servo
+	initTimer0(); //Configuración para el timer0
+	initPCINT(); //Configuración para pinchange
 	I2C_Slave_Init(0x30); //Se define la dirección del esclavo
-	initUART();
+	initUART(); // Se inicia el uart
 	cadena_texto("Esclavo Iniciado...\r\n");
 	sei(); //Habilitar interrupciones
 	
@@ -90,17 +83,11 @@ int main(void)
 			PINB |= (1 << PINB5); //Se hace un toggle para indicar que si hay datos 
 			bandera = 0; 
 		
-			anguloX = (dato_r[0] << 8) | dato_r[1];
-			anguloY = (dato_r[2] << 8) | dato_r[3];
-			//serialString("X: "); 
-			//num(anguloX);
-			//serialString(" | Y: ");
-			//num(anguloY);
-			//serialString("\r\n"); 
-			//leerColor(); //Función para leer el color del sensor 
-			control_servo((int16_t) anguloX);
-			//motor_steper((int16_t) anguloY);
-			// Actualizar modo del Stepper
+			anguloX = (dato_r[0] << 8) | dato_r[1]; // Se define que los primero bits son de X
+			anguloY = (dato_r[2] << 8) | dato_r[3]; // Se define que los segundos bits son de Y
+			control_servo((int16_t) anguloX); //control de servo
+			
+			//Logica para el movimiento del Stepper
 			if (anguloY > 45) modo_stepper = 1;
 			else if (anguloY < -45) modo_stepper = 2;
 			else modo_stepper = 0;
@@ -119,6 +106,8 @@ int main(void)
 //************************************************************************************
 // NON-INterrupt subroutines
 
+
+// logica para mover el servo, si es menor a -90 va a la izquierda y si es mayor a 90 va a la derecha.
 void control_servo(int16_t angulo2)
 {
 	if (angulo2 > -45 && angulo2 < 45)
@@ -184,16 +173,11 @@ void cadena_texto(char* texto) {
 //************************************************************************************
 // Interrupt subroutines
 ISR(PCINT2_vect) {
-	
-	/*
-	if (PIND & (1 << PIND5)) { // Solo contar flancos de subida
-		pulsos_conteo++;
-	}
-	¨*/
+//Interrupcipon para un cambio en el pin D6, donde se encuentra el Out
 	 uint8_t current = (PIND & (1 << PIND6));
 
     if (current && !last_state) {
-        pulsos_conteo++;  // SOLO flanco de subida
+        pulsos_conteo++;  // Solo flanco de subida
     }
 
     last_state = current;

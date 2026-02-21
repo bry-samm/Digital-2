@@ -14,29 +14,30 @@
 #include <stdint.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-#include <math.h> //Incluido para realiza operaciones matematicas
+#include <math.h> 
 #include "I2C_conf/I2C_conf.h"
 #include "LCD_control/LCD_control.h"
 #include "initUART/initUART.h"
 
-#define slave1 0x30
-#define slave2 0x40
+#define slave1 0x30 //Dirección de segundo esclavo
+#define slave2 0x40	//Dirección del primer esclavo
 
-#define slave1R (0x30 << 1) | 0x01 //Pongo el último bit en 1 para lectira
+#define slave1R (0x30 << 1) | 0x01 //Pongo el último bit en 1 para lectura
 #define slave1W (0x30 << 1) & 0b11111110 //Pongo el último bit en 0 para escribir
 
 #define slave2R (0x40 << 1) | 0x01 //Pongo el último bit en 1 para lectira
 #define slave2W (0x40 << 1) & 0b11111110 //Pongo el último bit en 0 para escribir
 
-uint8_t bufferI2C = 0;
-uint8_t color = 0;
+uint8_t bufferI2C = 0; //variable para guardar los datos de la distancia enviados
+uint8_t color = 0; //Variable para guardar el valor del color enviado 
 
-volatile int16_t angulo_x;
-volatile int16_t angulo_y;
-volatile uint8_t autorizado = 0;
-volatile uint8_t movimiento_motor = 0;
+volatile int16_t angulo_x; //Guarda los valores de angulos negativos y posivitos de X
+volatile int16_t angulo_y; //Guarda los valores de angulos negativos y posivitos de X
+volatile uint8_t autorizado = 0; // Variable para guardar el estado del disparo del cañon
+volatile uint8_t movimiento_motor = 0; 
 
 
+//variables para monidifcar los dato s
 volatile uint16_t angulox_IO = 0;
 volatile uint16_t anguloy_IO = 0;
 volatile uint16_t distancia_IO = 0;
@@ -98,26 +99,21 @@ int main(void)
 	while (1)
 	{
 		
-		angulo_giro();
-		comunicar_distancia();
-		
-		enviar_paquete_ESP32();
-		
-		convertir_3_digitos(bufferI2C, &s1_c, &s1_d, &s1_u);
-		
+		angulo_giro(); //función para obtener los valores de los angulos
+		comunicar_distancia(); // función para mostrar y recibir el valor de la distancia
+		enviar_paquete_ESP32(); //función para enviar datos a Adafruit
+		convertir_3_digitos(bufferI2C, &s1_c, &s1_d, &s1_u); //Convierte los valores a datos que pueda leer y escribir la LCD
+
+		// Se ejecuta para mostar los valores en el LCD
 		LCD_Set_Cursor(1,1);
 		LCD_Write_String("Dis");
-		
 		LCD_Set_Cursor(5,1);
 		LCD_Write_String("Ang");
-		
 		LCD_Set_Cursor(9,1);
 		LCD_Write_String("Gir");
-		
 		LCD_Set_Cursor(13,1);
 		LCD_Write_String("Col");
-		
-
+	
 		LCD_Set_Cursor(1,2);
 		LCD_Write_Char(s1_c);
 		LCD_Write_Char(s1_d);
@@ -126,7 +122,7 @@ int main(void)
 		writeChar(s1_d);
 		writeChar(s1_u);
 
-		PORTB ^= (1 << PORTB5);
+		PORTB ^= (1 << PORTB5); //Indicador de comunicación I2C
 		
 	}
 }
@@ -134,9 +130,9 @@ int main(void)
 // NON-INterrupt subroutines
 void setup()
 {
-	initLCD8bits();
-	initUART();
-	MPU6050_Init();
+	initLCD8bits(); // Se inicializa el LCD
+	initUART(); // Se inicializa la configuración del Serial 
+	MPU6050_Init(); // Se inicializa la comunicación del MPU
 	//Puerto de salida para leds (en este caso sería el LCD)
 	
 	DDRB |= (1 << DDB5); //Inicializo led del arduino, esto solo me va a servir para ver si si se está comunicando
@@ -256,13 +252,14 @@ void angulo_giro(void)
     int16_t Ax, Ay, Az;
     double ang_x, ang_y;
 
-    // --- Lectura I2C ---
+    // Se hace la lectura del I2C del MPU6050
     I2C_Master_Start();
 	I2C_Master_Write(MPU_W); 
 	I2C_Master_Write(ACCEL_XOUT_H);
     I2C_Master_RepeatedStart(); 
 	I2C_Master_Write(MPU_R);
     
+	//Se leen los valores que este modulo proporciona
     I2C_Master_Read(&high, 1); 
 	I2C_Master_Read(&low, 1); Ax = (high << 8) | low;
     I2C_Master_Read(&high, 1); 
@@ -271,13 +268,15 @@ void angulo_giro(void)
 	I2C_Master_Read(&low, 0); Az = (high << 8) | low; 
     I2C_Master_Stop();
 
-    // --- Matemáticas para hacer el calculo del angulo en los ejes
+    //Matemáticas para hacer el calculo del angulo en los ejes
 	ang_x = atan2(Ay, Az) * 57.296;
 	ang_y = atan2(-Ax, Az) * 57.296;
 	
     // Envio de datos por el serial para verificar funcionamienot
     cadena_texto("ANGULO -> X: "); 
 	Enviar_Numero((int16_t)ang_x);
+	
+	//Logica para mostrar los valores en la LCD, Simplificando escritura con abreviaturas
 	if (ang_x <= -30){
 		LCD_Set_Cursor(5,2);
 		LCD_Write_String("->");
@@ -302,6 +301,8 @@ void angulo_giro(void)
 	angulo_x = ang_x;
 	angulo_y = ang_y;
 	
+	//Esto solo funciona para verificar que los datos se estan recibiendo bien
+	//Para luego ser imprimidas en el serial. 
     cadena_texto(" deg | Y: "); 
 	Enviar_Numero((int16_t)ang_y);
     cadena_texto(" deg\r\n");
@@ -314,23 +315,17 @@ void Enviar_angulos(int16_t anguloX, int16_t anguloY)
 	 
 	 if(I2C_Master_Write(slave1W))
 	 { 
-		 /*
-		 I2C_Master_Write(anguloX); // Byte 1: Angulo X
-		 I2C_Master_Write(anguloY); // Byte 2: Angulo Y
-		 I2C_Master_Stop();
-		 */
-		 I2C_Master_Write((uint8_t)(anguloX >> 8)); // byte alto
-		 I2C_Master_Write((uint8_t)(anguloX & 0xFF)); // byte bajo
-
-		 // Ángulo Y
-		 I2C_Master_Write((uint8_t)(anguloY >> 8));
-		 I2C_Master_Write((uint8_t)(anguloY & 0xFF));
+		 I2C_Master_Write((uint8_t)(anguloX >> 8)); //  Se envia el byte alto del angulos x
+		 I2C_Master_Write((uint8_t)(anguloX & 0xFF)); // Se envia el byte bajo del angulo x 
+		 
+		 I2C_Master_Write((uint8_t)(anguloY >> 8));  // Se envia el byte alto del angulo y 
+		 I2C_Master_Write((uint8_t)(anguloY & 0xFF));  // Se envia el byte bajo del angulo y
 
 		 I2C_Master_Stop();
 	 }
 	 else
 	 {
-		 // Si el esclavo no responde, liberar el bus para no colgar el programa
+		 // Si el esclavo no responde, se indica en el serial. 
 		 I2C_Master_Stop();
 		 cadena_texto("Error: Esclavo no responde\r\n");
 	 }
@@ -342,6 +337,7 @@ void MPU6050_Init(void) {
     I2C_Master_Stop(); _delay_ms(10);
 }
 
+// Esta función sirve para enviar datos los datos al serial. 
 void Enviar_Numero(int16_t numero) {
     char temp[7]; uint8_t i = 0;
     if (numero == 0) { writeChar('0'); return; }
@@ -350,6 +346,7 @@ void Enviar_Numero(int16_t numero) {
     while (i > 0) { writeChar(temp[--i]); }
 }
 
+//función para enviar datos, se define la estructura que este debe de tener para enviar. 
 void enviar_paquete_ESP32(void)
 {
 	cadena_texto("<");
@@ -382,6 +379,7 @@ volatile uint8_t index = 0;
 
 ISR(USART_RX_vect) {
 
+//Logica para hacer el envio de datos al ESP32
 	char recibido = UDR0;
 
 	if (recibido == '\n' || recibido == '\r') {
@@ -408,7 +406,7 @@ ISR(USART_RX_vect) {
 			}
 		}
 
-		// ===== GUARDAR CADA VALOR EN SU VARIABLE =====
+		// Se guarda los valores recibidos 
 
 		if (val_idx >= 5) {
 
@@ -433,35 +431,3 @@ ISR(USART_RX_vect) {
 		}
 	}
 }
-
-
-/*
-#define BUFFER_SIZE 20
-
-volatile char buffer[BUFFER_SIZE];
-volatile uint8_t index = 0;
-volatile uint8_t paquete_listo = 0;
-
-ISR(USART_RX_vect)
-{
-	char c = UDR0;
-
-	if (c == '\n')  // fin de paquete
-	{
-		buffer[index] = '\0';
-		paquete_listo = 1;
-		index = 0;
-	}
-	else
-	{
-		if (index < BUFFER_SIZE - 1)
-		{
-			buffer[index++] = c;
-		}
-		else
-		{
-			index = 0;  // protección overflow
-		}
-	}
-}
-*/

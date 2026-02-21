@@ -577,29 +577,29 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0xdb6
+.debug_info     0x00000000      0xdb4
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_info    0x000005f4      0x1a1 I2C_conf/I2C_conf.o
  .debug_info    0x00000795       0x8d initUART/initUART.o
- .debug_info    0x00000822      0x460 main.o
- .debug_info    0x00000c82      0x134 PWMTimer1/PWMTimer1.o
+ .debug_info    0x00000822      0x45e main.o
+ .debug_info    0x00000c80      0x134 PWMTimer1/PWMTimer1.o
 
-.debug_abbrev   0x00000000      0x90d
+.debug_abbrev   0x00000000      0x8e4
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5a2 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_abbrev  0x000005a2       0xfe I2C_conf/I2C_conf.o
  .debug_abbrev  0x000006a0       0x4f initUART/initUART.o
- .debug_abbrev  0x000006ef      0x195 main.o
- .debug_abbrev  0x00000884       0x89 PWMTimer1/PWMTimer1.o
+ .debug_abbrev  0x000006ef      0x16c main.o
+ .debug_abbrev  0x0000085b       0x89 PWMTimer1/PWMTimer1.o
 
-.debug_line     0x00000000      0xa84
+.debug_line     0x00000000      0xa83
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x134 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_line    0x00000134      0x26d I2C_conf/I2C_conf.o
  .debug_line    0x000003a1       0xca initUART/initUART.o
- .debug_line    0x0000046b      0x49e main.o
- .debug_line    0x00000909      0x17b PWMTimer1/PWMTimer1.o
+ .debug_line    0x0000046b      0x49d main.o
+ .debug_line    0x00000908      0x17b PWMTimer1/PWMTimer1.o
 
 .debug_frame    0x00000000      0x23c
  *(.debug_frame)

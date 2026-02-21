@@ -5,7 +5,7 @@
  * Author:
  */
 //************************************************************************************
-//================================== ESCLAVO 1 =====================================
+//================================== ESCLAVO 2 =====================================
 //Este eslavo tiene la función de realizar la lectura para el sensor ultrasonico
 //*************************************************************************************
 //Recordar que siempre hay que poner una resistencia pull-up 
@@ -22,7 +22,7 @@
 
 //Se define la dirección del esclavo, en este caso como es mi programa yo decido que dirección tiene
 // caso contrario cuando se trabaja con un sensor, se debe de colocar la dirección descrita por el datasheet del sensor
-#define SlaveAddress 0x40
+#define SlaveAddress 0x40		// Configuro la dirección del esclavo 
 
 volatile uint8_t buffer = 0;
 uint16_t ticks;
@@ -48,7 +48,8 @@ int main(void)
 	setup();
 	while (1)
 	{
-		PORTB ^= (1 << PORTB5);
+		PORTB ^= (1 << PORTB5);		// Toggle de led
+		//Contador para inicar proceso de captura de señal del sensor ultrasonico
 		if (contador - last_trigger >= 110) {
 			trigger_ultrasonic();
 			last_trigger = contador;
@@ -122,7 +123,7 @@ void secuencia_leds(uint8_t activar)
 			inicio = contador;
 			estado = 1;
 		}
-
+		// variable contador aumenta cada interrupción del timer 2, se realiza una resta para saber el tiempo que ha transcurrido entre un estado y el otro
 		else if(estado == 1 && contador - inicio >= 500)
 		{
 			PORTD |= (1 << PORTD2);
@@ -179,37 +180,18 @@ void secuencia_leds(uint8_t activar)
 		estado = 0;
 	}
 }
-/*
+
 void init_ultrasonic_icp(void)
 {
-	DDRC |= (1 << PORTC2);     // TRIG como salida
-	DDRB &= ~(1 << DDB0);      // ICP1 (PB0 / D8) como entrada
+	DDRC |= (1 << PORTC3);	// TRIG como salida
+	DDRB &= ~(1 << DDB0);	// ICP1 (PB0 / D8) como entrada
 
 	TCCR1A = 0;
-
-	// Prescaler = 8
-	TCCR1B = (1 << CS11);
-
 	// Captura en flanco de subida inicialmente
-	TCCR1B |= (1 << ICES1);
-
-	// Habilitar interrupciones
-	TIMSK1 |= (1 << ICIE1);
-
-	TCNT1 = 0;
-}
-*/
-
-void init_ultrasonic_icp(void)
-{
-	DDRC |= (1 << PORTC3);
-	DDRB &= ~(1 << DDB0);
-
-	TCCR1A = 0;
 	TCCR1B = (1 << CS11) | (1 << ICES1);
 
-	TIFR1 |= (1 << ICF1);      // <-- LIMPIAR FLAG
-
+	TIFR1 |= (1 << ICF1);      // LIMPIAR FLAG
+	// Habilitar interrupciones
 	TIMSK1 |= (1 << ICIE1);
 
 	TCNT1 = 0;
@@ -225,6 +207,11 @@ void trigger_ultrasonic(void)
 
 //************************************************************************************
 // Interrupt subroutines
+
+// Esta interrpción es diferente a la que hemos utilizado normallmente, antes se usaaba la interrupçión por overflow, en este caso es capt 
+// Esta interrupción del Timer1 que mide el tiempo entre dos flancos consecutivos de una señal (cambiando el tipo de flanco detectado), 
+// calcula la diferencia en ticks y la convierte en una distancia aproximada guardándola en `last_distance`.
+
 ISR(TIMER1_CAPT_vect)
 {
 	if(captura_estado == 0)
@@ -237,12 +224,13 @@ ISR(TIMER1_CAPT_vect)
 	{
 		tiempo_fin = ICR1;
 		uint16_t ticks = tiempo_fin - tiempo_inicio;
-		last_distance = ticks / 116;   // SIN FLOAT
+		last_distance = ticks / 116;  
 		TCCR1B |= (1 << ICES1);
 		captura_estado = 0;
 	}
 }
 
+// Contador para la secuencia de leds
 ISR(TIMER2_OVF_vect)
 {
 	contador++;
